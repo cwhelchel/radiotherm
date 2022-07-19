@@ -1,6 +1,7 @@
 ﻿using RadioThermLib.Services;
 using System;
 using System.IO;
+using System.Net.Http;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
@@ -19,6 +20,8 @@ namespace RadioThermWpf.Services
                 appSettings = JsonSerializer.Deserialize<JsonObject>(json);
             }
         }
+
+        public HttpMessageHandler GetHttpMessageHandler() => new HttpClientHandler();
 
         public T? GetValue<T>(string key)
         {

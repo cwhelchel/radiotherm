@@ -14,7 +14,7 @@ namespace RadioThermLib.ProvidedServices
 {
     public class ThermostatService : IThermostatService
     {
-        private readonly HttpClient client = new HttpClient(new HttpClientHandler());
+        private readonly HttpClient client;
         private string? url;
         private ISettingsService settingsService;
         private ThermostatError? storedError;
@@ -22,7 +22,10 @@ namespace RadioThermLib.ProvidedServices
         public ThermostatService()
         {
             this.settingsService = Ioc.Default.GetRequiredService<ISettingsService>();
-            client.Timeout = TimeSpan.FromSeconds(10.0);
+
+            var msgHandler = settingsService.GetHttpMessageHandler();
+            this.client = new HttpClient(msgHandler);
+            //client.Timeout = TimeSpan.FromSeconds(10.0);
         }
 
         /// <inheritdoc/>
@@ -33,7 +36,7 @@ namespace RadioThermLib.ProvidedServices
 
             try
             {
-                var response = await client.GetAsync(url + "/tstat/");
+                var response = await client.GetAsync(url + "/tstat");
                 response.EnsureSuccessStatusCode();
 
                 var json = await response.Content.ReadAsStringAsync();

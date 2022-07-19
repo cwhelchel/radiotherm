@@ -24,6 +24,9 @@ namespace RadioThermLib.ProvidedServices.Tests
             var status = await uut.GetStatusAsync();
 
             Assert.IsNotNull(status);
+            Assert.AreEqual(Models.ThermostatStateEnum.Off, status.CurrentState);
+            Assert.AreEqual(69.0f, status.Temperature);
+            Assert.AreEqual(666.999f, status.TemporaryHeatSetPoint);
         }
 
         [TestMethod()]
@@ -37,7 +40,7 @@ namespace RadioThermLib.ProvidedServices.Tests
             Assert.IsFalse(string.IsNullOrWhiteSpace(version));
             
             // probably diff for everyone else
-            Assert.AreEqual("CT50 V1.94", version);
+            Assert.AreEqual("CT69 V6.9", version);
             
             Console.WriteLine(version);
         }
@@ -46,9 +49,13 @@ namespace RadioThermLib.ProvidedServices.Tests
         public async Task SetCoolAsyncTest()
         {
             var uut = new ThermostatService();
-            //await uut.SetCoolAsync(72.0f);
 
-            Assert.Fail();
+            await uut.SetCoolAsync(72.0f);
+
+            var status = await uut.GetStatusAsync();
+            Assert.IsNotNull(status);
+            Assert.AreEqual(Models.ThermostatStateEnum.Cool, status.CurrentState);
+            Assert.AreEqual(72.0f, status.TemporaryCoolSetPoint);
         }
 
         [TestMethod()]
@@ -56,17 +63,12 @@ namespace RadioThermLib.ProvidedServices.Tests
         {
             var uut = new ThermostatService();
 
-            //await uut.SetHeatAsync(72.0f);
+            await uut.SetHeatAsync(72.0f);
 
-            Assert.Fail();
-        }
-
-        [TestInitialize()]
-        public void SetupIoc()
-        {
-            Ioc.Default.ConfigureServices(new ServiceCollection()
-                .AddSingleton<ISettingsService, MockSettingsService>()
-                .BuildServiceProvider());
+            var status = await uut.GetStatusAsync();
+            Assert.IsNotNull(status);
+            Assert.AreEqual(Models.ThermostatStateEnum.Heat, status.CurrentState);
+            Assert.AreEqual(72.0f, status.TemporaryHeatSetPoint);
         }
     }
 }

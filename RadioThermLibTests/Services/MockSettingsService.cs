@@ -13,6 +13,8 @@ namespace RadioThermLibTests.Services
         bool setup = false;
         Dictionary<string, object> values = new Dictionary<string, object>();
 
+        public HttpMessageHandler GetHttpMessageHandler() => new MockHttpMessageHandler();
+
         public T? GetValue<T>(string key)
         {
             if (!setup)
@@ -20,7 +22,7 @@ namespace RadioThermLibTests.Services
                 // these values should be changed for future tests
                 values["DiscoveryTimeout"] = 1000;
                 values["LocalIpAddress"] = "192.168.11.2";
-                values["ThermostatUrl"] = "http://192.168.11.156";
+                values["ThermostatUrl"] = "http://notreallyreal";
                 values["ThermostatUrls"] = new StringCollection() { "http://192.168.11.156", "http://192.168.11.157" };
                 setup = true;
             }
@@ -30,7 +32,7 @@ namespace RadioThermLibTests.Services
 
         public void SetValue<T>(string key, T? value)
         {
-            throw new NotImplementedException();
+            values[key] = value;
         }
     }
 }

@@ -1,9 +1,12 @@
 ﻿using RadioThermLib.Services;
+using System.Net.Http;
 
 namespace RadioThermWpf.Services
 {
     public class SettingsService : ISettingsService
     {
+        public HttpMessageHandler GetHttpMessageHandler() => new HttpClientHandler();
+
         public T? GetValue<T>(string key)
         {
             T val = (T)Properties.Settings.Default[key];

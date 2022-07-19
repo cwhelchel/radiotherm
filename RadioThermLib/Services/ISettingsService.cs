@@ -21,5 +21,11 @@ namespace RadioThermLib.Services
         /// <typeparam name="T">The type of the object to retrieve.</typeparam>
         /// <param name="key">The key associated to the requested object.</param>
         T? GetValue<T>(string key);
+
+        /// <summary>
+        /// Gets the <see cref="HttpMessageHandler"/> to use with the <see cref="IThermostatService"/>
+        /// </summary>
+        /// <returns>A class instance that derives from <see cref="HttpMessageHandler"/></returns>
+        HttpMessageHandler GetHttpMessageHandler();
     }
 }
