@@ -1,0 +1,59 @@
+﻿<UserControl x:Class="RadioThermWpf.Views.DiscoveryWidget"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:RadioThermWpf.Views"
+             xmlns:viewmodels="clr-namespace:RadioThermLib.ViewModels;assembly=RadioThermLib"
+             xmlns:fa="http://schemas.fontawesome.io/icons/"
+             xmlns:ie="http://schemas.microsoft.com/xaml/behaviors"
+             mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance viewmodels:DiscoveryWidgetViewModel, IsDesignTimeCreatable=False}"
+             d:DesignHeight="450" d:DesignWidth="800">
+
+    <ie:Interaction.Triggers>
+        <ie:EventTrigger EventName="Loaded">
+            <ie:InvokeCommandAction Command="{Binding StartDiscoveryCommand}" />
+        </ie:EventTrigger>
+    </ie:Interaction.Triggers>
+    <Grid>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="5*"/>
+                <RowDefinition />
+            </Grid.RowDefinitions>
+
+            <Label Content="Discovered Devices:" Grid.Column="0" Grid.Row="0"/>
+
+            <ListView 
+                Grid.Row="1"
+                Grid.Column="0"
+                Margin="1,0,0,0"
+                ItemsSource="{Binding Discovered}" 
+                SelectedItem="{Binding SelectedDevice, Mode=TwoWay}">
+                <ie:Interaction.Triggers>
+                    <ie:EventTrigger EventName="SelectionChanged">
+                        <ie:InvokeCommandAction Command="{Binding RequestUpdateCommand}" />
+                    </ie:EventTrigger>
+                </ie:Interaction.Triggers>
+            </ListView>
+
+            <Button 
+                Grid.Column="0"
+                Grid.ColumnSpan="1"
+                Grid.Row="2"
+                Content="Select Device"
+                Command="{Binding RequestUpdateCommand}"
+                Margin="15"/>
+        </Grid>
+
+        <fa:ImageAwesome 
+            Height="25" Width="25" 
+            Grid.Row="1" Grid.Column="0" 
+            SpinDuration="2"
+            Icon="Refresh" 
+            Spin="True" 
+            Visibility="{Binding Path=IsDiscovering, Converter={StaticResource BoolToVis}}" />
+    </Grid>
+</UserControl>

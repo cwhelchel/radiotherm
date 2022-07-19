@@ -29,7 +29,8 @@
             <ColumnDefinition Width="1*"/>
         </Grid.ColumnDefinitions>
 
-        <Grid Background="{StaticResource BackgroundBrush}">
+        <local:DiscoveryWidget Grid.Column="0" />
+        <!--<Grid Grid.Column="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="5*"/>
@@ -66,7 +67,7 @@
             SpinDuration="2"
             Icon="Refresh" 
             Spin="True" 
-            Visibility="{Binding Path=IsDiscovering, Converter={StaticResource BoolToVis}}" />
+            Visibility="{Binding Path=IsDiscovering, Converter={StaticResource BoolToVis}}" />-->
 
         <local:ThermostatWidget Grid.Column="1" Margin="10" Background="{StaticResource BackgroundBrush}"/>
 

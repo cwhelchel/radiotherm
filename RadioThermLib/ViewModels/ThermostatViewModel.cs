@@ -9,12 +9,14 @@ using System.Text;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+using CommunityToolkit.Mvvm.Messaging.Messages;
 using RadioThermLib.Models;
 using RadioThermLib.Services;
 
 namespace RadioThermLib.ViewModels
 {
-    public class ThermostatViewModel : ObservableObject
+    public class ThermostatViewModel : ObservableRecipient
     {
         private readonly ISettingsService settingsService;
         private readonly IThermostatService thermostatService;
@@ -38,6 +40,8 @@ namespace RadioThermLib.ViewModels
             SetTemperatureCommand = new AsyncRelayCommand<string>(SetTemperatureAsync);
             StartDiscoveryCommand = new AsyncRelayCommand(StartDiscoveryAsync);
         }
+
+        #region Properties 
 
         public ThermostatState? State
         {
@@ -90,6 +94,8 @@ namespace RadioThermLib.ViewModels
         public IAsyncRelayCommand StartDiscoveryCommand { get; }
         public IAsyncRelayCommand UpdateCommand { get; }
         public IAsyncRelayCommand<string> SetTemperatureCommand { get; }
+
+        #endregion //Properties 
 
         public async Task UpdateAsync()
         {
@@ -166,6 +172,18 @@ namespace RadioThermLib.ViewModels
             }
 
             IsDiscovering = false;
+        }
+
+        protected override void OnActivated()
+        {
+            MessageHandler<ThermostatViewModel, UpdateRequestMessage> handler = async (r, m) => {
+                // run the update and respond true.
+                this.SelectedDevice = m.SelectedDevice;
+                await this.UpdateAsync();
+                m.Reply(true); 
+            };
+
+            Messenger.Register(this, handler);
         }
 
         private static string? GetLocalIpAddress()

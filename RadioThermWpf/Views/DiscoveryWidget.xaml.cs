@@ -12,25 +12,25 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace RadioThermWpf.Views
 {
     /// <summary>
-    /// Interaction logic for ThermostatWindow.xaml
+    /// Interaction logic for DiscoveryWidget.xaml
     /// </summary>
-    public partial class ThermostatWindow : Window
+    public partial class DiscoveryWidget : UserControl
     {
-        public ThermostatWindow()
+        public DiscoveryWidget()
         {
             InitializeComponent();
-
-            this.DataContext = Ioc.Default.GetRequiredService<ThermostatViewModel>();
+            this.DataContext = Ioc.Default.GetRequiredService<DiscoveryWidgetViewModel>();
 
             this.Loaded += (s, e) => ViewModel.IsActive = true;
             this.Unloaded += (s, e) => ViewModel.IsActive = false;
         }
 
-        public ThermostatViewModel ViewModel => (ThermostatViewModel)DataContext;
+        public DiscoveryWidgetViewModel ViewModel => (DiscoveryWidgetViewModel)DataContext;
     }
 }

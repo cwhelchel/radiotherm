@@ -29,6 +29,7 @@ namespace RadioThermWpf
                 .AddSingleton<IViewService, ViewService>()
                 .AddSingleton<IThermostatService, ThermostatService>() // Provided Service
                 .AddTransient<ThermostatViewModel>()
+                .AddTransient<DiscoveryWidgetViewModel>()
                 .BuildServiceProvider();
 
             Ioc.Default.ConfigureServices(services);
