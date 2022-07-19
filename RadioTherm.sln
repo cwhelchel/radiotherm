@@ -1,0 +1,42 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32602.215
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RadioThermLib", "RadioThermLib\RadioThermLib.csproj", "{31A3CD3E-8F54-42BC-80AE-29D4C1AC10EE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RadioThermWpf", "RadioThermWpf\RadioThermWpf.csproj", "{F22DF07C-C40C-412D-858D-5DEACCBC033A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RadioThermLibTests", "RadioThermLibTests\RadioThermLibTests.csproj", "{169B4D8A-7DD3-4156-BAC2-04C277F22F8E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{CCFBC743-3D40-47DE-B943-527686D6FDC0}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{31A3CD3E-8F54-42BC-80AE-29D4C1AC10EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{31A3CD3E-8F54-42BC-80AE-29D4C1AC10EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{31A3CD3E-8F54-42BC-80AE-29D4C1AC10EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{31A3CD3E-8F54-42BC-80AE-29D4C1AC10EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F22DF07C-C40C-412D-858D-5DEACCBC033A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F22DF07C-C40C-412D-858D-5DEACCBC033A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F22DF07C-C40C-412D-858D-5DEACCBC033A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F22DF07C-C40C-412D-858D-5DEACCBC033A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{169B4D8A-7DD3-4156-BAC2-04C277F22F8E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{169B4D8A-7DD3-4156-BAC2-04C277F22F8E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{169B4D8A-7DD3-4156-BAC2-04C277F22F8E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{169B4D8A-7DD3-4156-BAC2-04C277F22F8E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{169B4D8A-7DD3-4156-BAC2-04C277F22F8E} = {CCFBC743-3D40-47DE-B943-527686D6FDC0}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A0072F4F-DBF6-46ED-971D-C2FAFF4A4C7F}
+	EndGlobalSection
+EndGlobal
