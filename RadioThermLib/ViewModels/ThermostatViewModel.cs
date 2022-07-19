@@ -21,24 +21,20 @@ namespace RadioThermLib.ViewModels
         private readonly ISettingsService settingsService;
         private readonly IThermostatService thermostatService;
         private readonly IViewService viewService;
-        private ObservableCollection<string> discovered;
+        private ThermostatState? state;
         private string? unitName;
         private string? version;
         private float currentSetpoint;
         private bool isUpdating;
-        private bool isDiscovering;
-        private ThermostatState state;
-        private string selectedDevice;
+        private string selectedDevice = "";
 
         public ThermostatViewModel(ISettingsService settingsService, IThermostatService thermostatService, IViewService viewService)
         {
             this.settingsService = settingsService;
             this.thermostatService = thermostatService;
             this.viewService = viewService;
-            this.discovered = new ObservableCollection<string>();
             UpdateCommand = new AsyncRelayCommand(UpdateAsync);
             SetTemperatureCommand = new AsyncRelayCommand<string>(SetTemperatureAsync);
-            StartDiscoveryCommand = new AsyncRelayCommand(StartDiscoveryAsync);
         }
 
         #region Properties 
@@ -73,25 +69,6 @@ namespace RadioThermLib.ViewModels
             set => SetProperty(ref isUpdating, value);
         }
 
-        public bool IsDiscovering
-        {
-            get => isDiscovering;
-            set => SetProperty(ref isDiscovering, value);
-        }
-
-        public string SelectedDevice
-        {
-            get => selectedDevice;
-            set => SetProperty(ref selectedDevice, value);
-        }
-
-        public ObservableCollection<string> Discovered
-        {
-            get => discovered;
-            set => SetProperty(ref discovered, value);
-        }
-
-        public IAsyncRelayCommand StartDiscoveryCommand { get; }
         public IAsyncRelayCommand UpdateCommand { get; }
         public IAsyncRelayCommand<string> SetTemperatureCommand { get; }
 
@@ -99,7 +76,7 @@ namespace RadioThermLib.ViewModels
 
         public async Task UpdateAsync()
         {
-            settingsService.SetValue("ThermostatUrl", "http://" + SelectedDevice);
+            settingsService.SetValue("ThermostatUrl", "http://" + this.selectedDevice);
 
             IsUpdating = true;
 
@@ -147,58 +124,16 @@ namespace RadioThermLib.ViewModels
             IsUpdating = false;
         }
 
-        public async Task StartDiscoveryAsync()
-        {
-            int timeout = this.settingsService.GetValue<int>("DiscoveryTimeout");
-
-            IsDiscovering = true;
-
-            var localIp = GetLocalIpAddress();
-
-            if (localIp == null)
-                return;
-
-            using (var v = new MarvellDiscovery(IPAddress.Parse(localIp), timeout))
-            {
-                await Task.Run(() =>
-                {
-                    v.Discover();
-                });
-
-                foreach (var ip in v.DiscoveredDevices)
-                {
-                    Discovered.Add(ip.ToString());
-                }
-            }
-
-            IsDiscovering = false;
-        }
-
         protected override void OnActivated()
         {
             MessageHandler<ThermostatViewModel, UpdateRequestMessage> handler = async (r, m) => {
                 // run the update and respond true.
-                this.SelectedDevice = m.SelectedDevice;
+                this.selectedDevice = m.SelectedDevice;
                 await this.UpdateAsync();
                 m.Reply(true); 
             };
 
             Messenger.Register(this, handler);
-        }
-
-        private static string? GetLocalIpAddress()
-        {
-            // https://stackoverflow.com/a/27376368 
-
-            string? localIP;
-            using (Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, 0))
-            {
-                socket.Connect("8.8.8.8", 65530);
-                var endPoint = socket.LocalEndPoint as IPEndPoint;
-                localIP = endPoint?.Address.ToString();
-
-                return localIP;
-            }
         }
     }
 }

@@ -15,6 +15,8 @@ namespace RadioThermLibTests.ViewModels
     [TestClass()]
     public class ThermostatViewModelTests
     {
+        private bool initialized = false;
+
         [TestMethod()]
         public void ThermostatViewModelTest()
         {
@@ -22,7 +24,6 @@ namespace RadioThermLibTests.ViewModels
             Assert.IsNotNull(vm);
             Assert.IsNotNull(vm.UpdateCommand);
             Assert.IsNotNull(vm.SetTemperatureCommand);
-            Assert.IsNotNull(vm.StartDiscoveryCommand);
         }
 
         [TestMethod()]
@@ -48,25 +49,6 @@ namespace RadioThermLibTests.ViewModels
             await vm.SetTemperatureAsync("69.0");
 
             Assert.AreEqual(69.0f, vm.State.TemporaryCoolSetPoint);
-        }
-
-        [TestMethod()]
-        public async Task StartDiscoveryAsyncTest()
-        {
-            var vm = Ioc.Default.GetService<ThermostatViewModel>();
-
-            await vm.UpdateAsync();
-            await vm.StartDiscoveryAsync();
-        }
-
-        [TestInitialize()]
-        public void InitializeTest()
-        {
-            Ioc.Default.ConfigureServices(new ServiceCollection()
-                 .AddSingleton<ISettingsService, MockSettingsService>()
-                 .AddSingleton<IThermostatService, MockThermostatService>()
-                 .AddTransient<ThermostatViewModel>()
-                 .BuildServiceProvider());
         }
     }
 }

@@ -8,7 +8,7 @@
         xmlns:ie="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:fa="http://schemas.fontawesome.io/icons/"
         mc:Ignorable="d"
-        d:DataContext="{d:DesignInstance viewmodels:ThermostatViewModel, IsDesignTimeCreatable=True}" 
+        d:DataContext="{d:DesignInstance viewmodels:ThermostatViewModel, IsDesignTimeCreatable=False}" 
         Title="Radio Thermostat" 
         Height="450" Width="800">
 
@@ -17,12 +17,7 @@
             <Setter Property="Background" Value="{StaticResource BackgroundBrush}" />
         </Style>
     </Window.Resources>
-    <ie:Interaction.Triggers>
-        <ie:EventTrigger EventName="Loaded">
-            <ie:InvokeCommandAction Command="{Binding StartDiscoveryCommand}" />
-        </ie:EventTrigger>
-    </ie:Interaction.Triggers>
-    
+
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width=".5*"/>
