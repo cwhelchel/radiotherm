@@ -28,7 +28,6 @@ namespace RadioThermWpf
                 .AddSingleton<ISettingsService, JsonSettingService>()
                 .AddSingleton<IViewService, ViewService>()
                 .AddSingleton<IThermostatService, ThermostatService>() // Provided Service
-                .AddTransient<DiscoveryViewModel>()
                 .AddTransient<ThermostatViewModel>()
                 .BuildServiceProvider();
 
