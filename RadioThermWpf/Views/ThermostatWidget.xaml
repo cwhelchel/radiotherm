@@ -6,26 +6,21 @@
         xmlns:viewmodels="clr-namespace:RadioThermLib.ViewModels;assembly=RadioThermLib"
         xmlns:fa="http://schemas.fontawesome.io/icons/"
         mc:Ignorable="d"
-        DataContext="{Binding Path=DataContext, RelativeSource={RelativeSource AncestorType={x:Type ContentControl}}}">
-    <!--d:DataContext="{d:DesignInstance viewmodels:ThermostatViewModel, IsDesignTimeCreatable=True}"-->
+        d:DataContext="{d:DesignInstance viewmodels:ThermostatWidgetViewModel, IsDesignTimeCreatable=False}" >
 
     <UserControl.Resources>
         <BitmapImage x:Key="coolImage" UriSource="..\icons8-snowflake-48.png" />
         <BitmapImage x:Key="heatImage" UriSource="..\icons8-fire-48.png" />
-        <!--<BooleanToVisibilityConverter x:Key="BoolToVis" />-->
-        <Style x:Key="borderStyle" TargetType="{x:Type Border}">
-            <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="BorderBrush" Value="Black" />
-        </Style>
         <Style x:Key="labelColor" TargetType="{x:Type Label}">
             <Setter Property="Foreground" Value="DodgerBlue"/>
             <Style.Triggers>
                 <DataTrigger Binding="{Binding State.CurrentState}" Value="Heat">
-                    <Setter Property="Content" Value="Red" />
+                    <Setter Property="Foreground" Value="Red" />
                 </DataTrigger>
             </Style.Triggers>
         </Style>
     </UserControl.Resources>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -107,28 +102,13 @@
 
 
         <StackPanel Grid.Row="4" Orientation="Horizontal">
-            <Button HorizontalAlignment="Left" VerticalAlignment="Top" Height="73" Width="83" ToolTip="Toggle Mode">
-                <Button.Style>
-                    <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
-                        <Setter Property="Content" Value="" />
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding State.ThermostatMode}" Value="Heat">
-                                <Setter Property="Content">
-                                    <Setter.Value>
-                                        <Image Source="{StaticResource heatImage}"/>
-                                    </Setter.Value>
-                                </Setter>
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding State.ThermostatMode}" Value="Cool">
-                                <Setter Property="Content">
-                                    <Setter.Value>
-                                        <Image Source="{StaticResource coolImage}"/>
-                                    </Setter.Value>
-                                </Setter>
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </Button.Style>
+            <Button HorizontalAlignment="Left" VerticalAlignment="Top" MinWidth="65" ToolTip="Toggle Mode">
+                <Button.Content>
+                    <StackPanel>
+                        <Image Source="{Binding State.ThermostatMode, Converter={StaticResource ModeToImage}}"/>
+                        <Label Content="{Binding State.ThermostatMode, Converter={StaticResource ModeToText}}" HorizontalAlignment="Center" />
+                    </StackPanel>
+                </Button.Content>
             </Button>
         </StackPanel>
 

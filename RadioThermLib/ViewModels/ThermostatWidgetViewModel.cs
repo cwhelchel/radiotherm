@@ -16,7 +16,7 @@ using RadioThermLib.Services;
 
 namespace RadioThermLib.ViewModels
 {
-    public class ThermostatViewModel : ObservableRecipient
+    public class ThermostatWidgetViewModel : ObservableRecipient
     {
         private readonly ISettingsService settingsService;
         private readonly IThermostatService thermostatService;
@@ -28,7 +28,7 @@ namespace RadioThermLib.ViewModels
         private bool isUpdating;
         private string selectedDevice = "";
 
-        public ThermostatViewModel(ISettingsService settingsService, IThermostatService thermostatService, IViewService viewService)
+        public ThermostatWidgetViewModel(ISettingsService settingsService, IThermostatService thermostatService, IViewService viewService)
         {
             this.settingsService = settingsService;
             this.thermostatService = thermostatService;
@@ -126,7 +126,7 @@ namespace RadioThermLib.ViewModels
 
         protected override void OnActivated()
         {
-            MessageHandler<ThermostatViewModel, UpdateRequestMessage> handler = async (r, m) => {
+            MessageHandler<ThermostatWidgetViewModel, UpdateRequestMessage> handler = async (r, m) => {
                 // run the update and respond true.
                 this.selectedDevice = m.SelectedDevice;
                 await this.UpdateAsync();

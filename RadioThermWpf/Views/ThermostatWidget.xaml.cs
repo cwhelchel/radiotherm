@@ -30,9 +30,12 @@ namespace RadioThermWpf.Views
         {
             InitializeComponent();
 
-            //this.DataContext = Ioc.Default.GetRequiredService<ThermostatViewModel>();
+            this.DataContext = Ioc.Default.GetRequiredService<ThermostatWidgetViewModel>();
+
+            this.Loaded += (s, e) => ViewModel.IsActive = true;
+            this.Unloaded += (s, e) => ViewModel.IsActive = false;
         }
 
-        public ThermostatViewModel ViewModel => (ThermostatViewModel)DataContext;
+        public ThermostatWidgetViewModel ViewModel => (ThermostatWidgetViewModel)DataContext;
     }
 }

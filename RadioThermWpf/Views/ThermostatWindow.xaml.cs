@@ -24,13 +24,6 @@ namespace RadioThermWpf.Views
         public ThermostatWindow()
         {
             InitializeComponent();
-
-            this.DataContext = Ioc.Default.GetRequiredService<ThermostatViewModel>();
-
-            this.Loaded += (s, e) => ViewModel.IsActive = true;
-            this.Unloaded += (s, e) => ViewModel.IsActive = false;
         }
-
-        public ThermostatViewModel ViewModel => (ThermostatViewModel)DataContext;
     }
 }

@@ -22,7 +22,7 @@ namespace RadioThermLibTests
                  .AddSingleton<ISettingsService, MockSettingsService>()
                  .AddSingleton<IThermostatService, MockThermostatService>()
                  .AddSingleton<IViewService, MockViewService>()
-                 .AddTransient<ThermostatViewModel>()
+                 .AddTransient<ThermostatWidgetViewModel>()
                  .AddTransient<DiscoveryWidgetViewModel>()
                  .BuildServiceProvider());
         }
