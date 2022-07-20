@@ -3,7 +3,6 @@ using System.Text.Json.Serialization;
 
 namespace RadioThermLib.Models;
 
-
 public sealed record ThermostatState(
     [property: JsonPropertyName("temp")] float Temperature,
     [property: JsonPropertyName("tmode")] ThermostatModeEnum ThermostatMode,
@@ -41,34 +40,6 @@ public static class Default
                               new TimeObj { day = 0, hour = 0, minute = 0 },
                               0);
 }
-
-//public class ThermostatState
-//{
-//    public float temp { get; set; }
-//    public ThermostatModeEnum tmode { get; set; }
-//    public FanModeEnum fmode { get; set; }
-//    [JsonPropertyName("override")]
-//    public int _override { get; set; }
-//    public int hold { get; set; }
-//    public float t_cool { get; set; }
-//    public float t_heat { get; set; }
-//    public float a_cool { get; set; }
-//    public float a_heat { get; set; }
-//    public float it_cool { get; set; }
-//    public float it_heat { get; set; }
-//    public ThermostatStateEnum tstate { get; set; }
-//    public FanStateEnum fstate { get; set; }
-//    public TimeObj time { get; set; }
-//    public int t_type_post { get; set; }
-
-//    public string SetPointState
-//    {
-//        get
-//        {
-//            return (_override == 1 ? "Temporary" : "Programmed");
-//        }
-//    }
-//}
 
 public sealed class TimeObj
 {

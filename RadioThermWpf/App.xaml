@@ -6,5 +6,7 @@
     <Application.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis" />
         <SolidColorBrush x:Key="BackgroundBrush" Color="AliceBlue" />
+        <local:ThermostatModeToImageValueConverter x:Key="ModeToImage" />
+        <local:ThermostatModeToTextValueConverter x:Key="ModeToText" />
     </Application.Resources>
 </Application>
