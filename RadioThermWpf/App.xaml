@@ -2,11 +2,12 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:RadioThermWpf"
+             xmlns:valcvtr="clr-namespace:RadioThermWpf.ValueConverters"
              StartupUri="Views\ThermostatWindow.xaml">
     <Application.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis" />
         <SolidColorBrush x:Key="BackgroundBrush" Color="AliceBlue" />
-        <local:ThermostatModeToImageValueConverter x:Key="ModeToImage" />
-        <local:ThermostatModeToTextValueConverter x:Key="ModeToText" />
+        <valcvtr:ThermostatModeToImageValueConverter x:Key="ModeToImage" />
+        <valcvtr:ThermostatModeToTextValueConverter x:Key="ModeToText" />
     </Application.Resources>
 </Application>

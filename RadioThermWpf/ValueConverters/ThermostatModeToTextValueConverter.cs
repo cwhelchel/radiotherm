@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Windows.Data;
 using RadioThermLib.Models;
 
-namespace RadioThermWpf
+namespace RadioThermWpf.ValueConverters
 {
     public class ThermostatModeToTextValueConverter : IValueConverter
     {
