@@ -1,0 +1,46 @@
+﻿@page "/discover"
+@using RadioThermLib;
+@using RadioThermLib.ViewModels;
+@using System.Net.Sockets
+@using System.Net
+
+@inject DiscoveryWidgetViewModel discoverViewModel
+
+<h3>MyCoolComponent</h3>
+
+
+@if (devices == null || discoverViewModel.IsDiscovering)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>IP Address</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var ip in devices)
+            {
+                <tr>
+                    <td>@ip</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <button class="btn btn-primary" @onclick="discoverViewModel.StartDiscoveryAsync">Refresh Devices</button>
+}
+
+@code {
+    private List<string>? devices;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await discoverViewModel.StartDiscoveryAsync();
+
+        this.devices = discoverViewModel.Discovered.ToList<string>();
+    }
+}
