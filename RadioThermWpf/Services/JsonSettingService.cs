@@ -1,5 +1,6 @@
 ﻿using RadioThermLib.Services;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Text.Json;
@@ -25,12 +26,20 @@ namespace RadioThermWpf.Services
 
         public T? GetValue<T>(string key)
         {
-            return appSettings[key].GetValue<T>();
+            if (appSettings[key] is JsonValue)
+                return appSettings[key].GetValue<T>();
+            else if (appSettings[key] is JsonArray)
+            {
+                var arr = appSettings[key].AsArray();
+                return arr.Deserialize<T>();
+            }
+
+            throw new KeyNotFoundException();
         }
 
         public void SetValue<T>(string key, T? value)
         {
-            appSettings[key] = value.ToString();
+            appSettings[key] = JsonSerializer.SerializeToNode<T>(value);
             Save();
         }
 
@@ -46,6 +55,7 @@ namespace RadioThermWpf.Services
 
     public sealed record AppSettings(
         [property: JsonPropertyName("ThermostatUrl")] string ThermostatUrl,
-        [property: JsonPropertyName("DiscoveryTimeout")] int DiscoveryTimeout
+        [property: JsonPropertyName("DiscoveryTimeout")] int DiscoveryTimeout,
+        [property: JsonPropertyName("ManualAddresses")] List<string> ManualAddresses
     );
 }
