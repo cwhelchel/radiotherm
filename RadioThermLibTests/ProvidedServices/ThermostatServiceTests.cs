@@ -19,7 +19,7 @@ namespace RadioThermLib.ProvidedServices.Tests
         [TestMethod()]
         public async Task GetStatusAsyncTest()
         {
-            var uut = new ThermostatService();
+            var uut = Ioc.Default.GetService<IThermostatService>();
 
             var status = await uut.GetStatusAsync();
 
@@ -32,7 +32,7 @@ namespace RadioThermLib.ProvidedServices.Tests
         [TestMethod()]
         public async Task GetVersionAsyncTest()
         {
-            var uut = new ThermostatService();
+            var uut = Ioc.Default.GetService<IThermostatService>();
 
             var version = await uut.GetVersionAsync();
 
@@ -48,7 +48,7 @@ namespace RadioThermLib.ProvidedServices.Tests
         [TestMethod()]
         public async Task SetCoolAsyncTest()
         {
-            var uut = new ThermostatService();
+            var uut = Ioc.Default.GetService<IThermostatService>();
 
             await uut.SetCoolAsync(72.0f);
 
@@ -61,7 +61,7 @@ namespace RadioThermLib.ProvidedServices.Tests
         [TestMethod()]
         public async Task SetHeatAsyncTest()
         {
-            var uut = new ThermostatService();
+            var uut = Ioc.Default.GetService<IThermostatService>();
 
             await uut.SetHeatAsync(72.0f);
 

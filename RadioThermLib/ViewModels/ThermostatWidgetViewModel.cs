@@ -124,16 +124,22 @@ namespace RadioThermLib.ViewModels
             IsUpdating = false;
         }
 
-        protected override void OnActivated()
+        public void RegisterMessages()
         {
-            MessageHandler<ThermostatWidgetViewModel, UpdateRequestMessage> handler = async (r, m) => {
+            MessageHandler<ThermostatWidgetViewModel, UpdateRequestMessage> handler = async (r, m) =>
+            {
                 // run the update and respond true.
                 this.selectedDevice = m.SelectedDevice;
                 await this.UpdateAsync();
-                m.Reply(true); 
+                m.Reply(true);
             };
 
             Messenger.Register(this, handler);
+        }
+
+        protected override void OnActivated()
+        {
+            RegisterMessages();
         }
     }
 }

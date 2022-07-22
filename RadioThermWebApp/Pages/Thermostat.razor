@@ -1,0 +1,45 @@
+﻿@page "/thermostat"
+@using CommunityToolkit.Mvvm.Messaging
+@using RadioThermLib;
+@using RadioThermLib.ViewModels;
+@using System.Net.Sockets
+@using System.Net
+
+@inject ThermostatWidgetViewModel thermostatViewModel
+
+<h3>Thermostat</h3>
+
+
+@if (thermostatViewModel.State == null ||thermostatViewModel.IsUpdating)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>IP Address</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>@thermostatViewModel.State.Temperature</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <button class="btn btn-primary">Refresh Devices</button>
+}
+
+@code {
+    private List<string>? devices;
+
+    protected override async Task OnInitializedAsync()
+    {
+        thermostatViewModel.RegisterMessages();
+
+        var urm = new UpdateRequestMessage() { SelectedDevice = "192.168.11.156" };
+        var res = WeakReferenceMessenger.Default.Send(urm);
+    }
+}

@@ -19,9 +19,9 @@ namespace RadioThermLib.ProvidedServices
         private ISettingsService settingsService;
         private ThermostatError? storedError;
 
-        public ThermostatService()
+        public ThermostatService(ISettingsService settinsService)
         {
-            this.settingsService = Ioc.Default.GetRequiredService<ISettingsService>();
+            this.settingsService = settinsService; // Ioc.Default.GetRequiredService<ISettingsService>();
 
             var msgHandler = settingsService.GetHttpMessageHandler();
             this.client = new HttpClient(msgHandler);

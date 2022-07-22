@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using RadioThermLib.Services;
 using RadioThermWebApp.Services;
+using RadioThermLib.ViewModels;
+using RadioThermLib.ProvidedServices;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,7 +15,9 @@ builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<WeatherForecastService>();
 builder.Services.AddSingleton<ISettingsService, JsonSettingService>();
 builder.Services.AddSingleton<IViewService, ViewService>();
-builder.Services.AddTransient<RadioThermLib.ViewModels.DiscoveryWidgetViewModel>();
+builder.Services.AddSingleton<IThermostatService, ThermostatService>();
+builder.Services.AddTransient<ThermostatWidgetViewModel>();
+builder.Services.AddTransient<DiscoveryWidgetViewModel>();
 
 var app = builder.Build();
 
