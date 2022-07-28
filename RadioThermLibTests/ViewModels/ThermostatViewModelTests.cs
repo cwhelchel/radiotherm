@@ -15,12 +15,10 @@ namespace RadioThermLibTests.ViewModels
     [TestClass()]
     public class ThermostatViewModelTests
     {
-        private bool initialized = false;
-
         [TestMethod()]
         public void ThermostatViewModelTest()
         {
-            var vm = Ioc.Default.GetService<ThermostatWidgetViewModel>();
+            var vm = Ioc.Default.GetRequiredService<ThermostatWidgetViewModel>();
             Assert.IsNotNull(vm);
             Assert.IsNotNull(vm.UpdateCommand);
             Assert.IsNotNull(vm.SetTemperatureCommand);
@@ -29,25 +27,26 @@ namespace RadioThermLibTests.ViewModels
         [TestMethod()]
         public async Task UpdateAsyncTest()
         {
-            var vm = Ioc.Default.GetService<ThermostatWidgetViewModel>();
+            var vm = Ioc.Default.GetRequiredService<ThermostatWidgetViewModel>();
             Assert.IsNotNull(vm);
 
-            await vm.UpdateAsync();
+            await vm.UpdateAsync(null!);
 
             Assert.IsNotNull(vm.State);
-            Assert.AreEqual(0.0f, vm.State.Temperature);
+            Assert.AreEqual(69.0f, vm.State.Temperature);
         }
 
         [TestMethod()]
         public async Task SetTemperatureAsyncTest()
         {
-            var vm = Ioc.Default.GetService<ThermostatWidgetViewModel>();
-            
-            await vm.UpdateAsync();
+            var vm = Ioc.Default.GetRequiredService<ThermostatWidgetViewModel>();
+
+            // called before updated
+            await Assert.ThrowsExceptionAsync<NullReferenceException>(async () => await vm.SetTemperatureAsync("69.0"));
+
+            await vm.UpdateAsync(null!);
             Assert.AreEqual(0.0f, vm.State.TemporaryCoolSetPoint);
-
             await vm.SetTemperatureAsync("69.0");
-
             Assert.AreEqual(69.0f, vm.State.TemporaryCoolSetPoint);
         }
     }

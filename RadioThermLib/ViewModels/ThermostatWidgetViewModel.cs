@@ -33,7 +33,7 @@ namespace RadioThermLib.ViewModels
             this.settingsService = settingsService;
             this.thermostatService = thermostatService;
             this.viewService = viewService;
-            UpdateCommand = new AsyncRelayCommand(UpdateAsync);
+            UpdateCommand = new AsyncRelayCommand<string>(UpdateAsync!);
             SetTemperatureCommand = new AsyncRelayCommand<string>(SetTemperatureAsync);
         }
 
@@ -74,9 +74,14 @@ namespace RadioThermLib.ViewModels
 
         #endregion //Properties 
 
-        public async Task UpdateAsync()
+        /// <summary>
+        /// Updates the Thermostat's <see cref="State"/>.
+        /// </summary>
+        /// <param name="selectedDeviceIp">The thermostat device's IP address.</param>
+        /// <returns>awaitable task.</returns>
+        public async Task UpdateAsync(string selectedDeviceIp)
         {
-            settingsService.SetValue("ThermostatUrl", "http://" + this.selectedDevice);
+            settingsService.SetValue("ThermostatUrl", "http://" + selectedDeviceIp);
 
             IsUpdating = true;
 
@@ -103,6 +108,12 @@ namespace RadioThermLib.ViewModels
             IsUpdating = false;
         }
 
+        /// <summary>
+        /// Sets the remote thermostat's set point (it's target temperature).
+        /// </summary>
+        /// <param name="newSetPoint">New target temperature. In degrees F</param>
+        /// <returns>awaitable task</returns>
+        /// <exception cref="NullReferenceException">Occurs if this is called before <see cref="UpdateAsync"/></exception>
         public async Task SetTemperatureAsync(string? newSetPoint)
         {
             IsUpdating = true;
@@ -118,28 +129,28 @@ namespace RadioThermLib.ViewModels
                     await thermostatService.SetHeatAsync(newTemp);
                 }
 
-                await UpdateAsync();
+                await UpdateAsync(this.selectedDevice);
             }
 
             IsUpdating = false;
         }
 
-        public void RegisterMessages()
+        protected override void OnActivated()
+        {
+            RegisterMessages();
+        }
+
+        private void RegisterMessages()
         {
             MessageHandler<ThermostatWidgetViewModel, UpdateRequestMessage> handler = async (r, m) =>
             {
                 // run the update and respond true.
                 this.selectedDevice = m.SelectedDevice;
-                await this.UpdateAsync();
+                await this.UpdateAsync(this.selectedDevice);
                 m.Reply(true);
             };
 
             Messenger.Register(this, handler);
-        }
-
-        protected override void OnActivated()
-        {
-            RegisterMessages();
         }
     }
 }

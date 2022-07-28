@@ -24,9 +24,8 @@ namespace RadioThermLib.ProvidedServices.Tests
             var status = await uut.GetStatusAsync();
 
             Assert.IsNotNull(status);
-            Assert.AreEqual(Models.ThermostatStateEnum.Off, status.CurrentState);
+            Assert.AreEqual(Models.ThermostatStateEnum.Cool, status.CurrentState);
             Assert.AreEqual(69.0f, status.Temperature);
-            Assert.AreEqual(666.999f, status.TemporaryHeatSetPoint);
         }
 
         [TestMethod()]

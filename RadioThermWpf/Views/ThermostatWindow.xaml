@@ -24,45 +24,6 @@
         </Grid.ColumnDefinitions>
 
         <local:DiscoveryWidget Grid.Column="0" />
-        <!--<Grid Grid.Column="0">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="5*"/>
-                <RowDefinition />
-            </Grid.RowDefinitions>
-            
-            <Label Content="Discovered Devices:" Grid.Column="0" Grid.Row="0"/>
-            
-            <ListView 
-                Grid.Row="1"
-                Grid.Column="0"
-                Margin="1,0,0,0"
-                ItemsSource="{Binding Discovered}" 
-                SelectedItem="{Binding SelectedDevice, Mode=TwoWay}">
-                <ie:Interaction.Triggers>
-                    <ie:EventTrigger EventName="SelectionChanged">
-                        <ie:InvokeCommandAction Command="{Binding UpdateCommand}" />
-                    </ie:EventTrigger>
-                </ie:Interaction.Triggers>
-            </ListView>
-            
-            <Button 
-                Grid.Column="0"
-                Grid.ColumnSpan="1"
-                Grid.Row="2"
-                Content="Select Device"
-                Command="{Binding UpdateCommand}"
-                Margin="15"/>
-        </Grid>
-
-        <fa:ImageAwesome 
-            Height="25" Width="25" 
-            Grid.Row="1" Grid.Column="0" 
-            SpinDuration="2"
-            Icon="Refresh" 
-            Spin="True" 
-            Visibility="{Binding Path=IsDiscovering, Converter={StaticResource BoolToVis}}" />-->
-
         <local:ThermostatWidget Grid.Column="1" Margin="10" Background="{StaticResource BackgroundBrush}"/>
 
     </Grid>

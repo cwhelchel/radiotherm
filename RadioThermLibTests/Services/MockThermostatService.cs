@@ -19,7 +19,7 @@ namespace RadioThermLibTests.Services
 
         public async Task<ThermostatState> GetStatusAsync()
         {
-            return state;
+            return state with { Temperature = 69.0f};
         }
 
         public async Task<string> GetUnitNameAsync()
@@ -29,17 +29,17 @@ namespace RadioThermLibTests.Services
 
         public async Task<string> GetVersionAsync()
         {
-            return "UT 6.9";
+            return "CT69 V6.9";
         }
 
         public async Task SetCoolAsync(float temp)
         {
-            state = state with { TemporaryCoolSetPoint = temp };
+            state = state with { TemporaryCoolSetPoint = temp, CurrentState = ThermostatStateEnum.Cool};
         }
 
         public async Task SetHeatAsync(float temp)
         {
-            state = state with { TemporaryHeatSetPoint = temp };
+            state = state with { TemporaryHeatSetPoint = temp, CurrentState = ThermostatStateEnum.Heat };
         }
     }
 }
