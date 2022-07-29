@@ -80,10 +80,14 @@ namespace RadioThermLib.ViewModels
 
                 foreach (var ip in v.DiscoveredDevices)
                 {
-                    Discovered.Add(ip.ToString());
+                    if (!string.IsNullOrWhiteSpace(ip.ToString()))
+                        Discovered.Add(ip.ToString());
                 }
 
-                foreach(var manual in manualEntries!)
+                var toSave = new List<string>(Discovered);
+                this.settingsService.SetValue("DiscoveredAddresses", toSave);
+
+                foreach (var manual in manualEntries!)
                 {
                     Discovered.Add(manual);
                 }

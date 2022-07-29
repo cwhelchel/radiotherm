@@ -4,13 +4,17 @@
 @using RadioThermLib.ViewModels;
 @using System.Net.Sockets
 @using System.Net
+@using CommunityToolkit.Mvvm.DependencyInjection
+@using RadioThermLib.Models
+@using RadioThermLib.Services
 
 @inject ThermostatWidgetViewModel thermostatViewModel
+@inject ISettingsService settingsService
 
 <h3>Thermostat</h3>
 
 
-@if (thermostatViewModel.State == null ||thermostatViewModel.IsUpdating)
+@if (thermostatViewModel.State == null || thermostatViewModel.IsUpdating)
 {
     <p><em>Loading...</em></p>
 }
@@ -19,27 +23,60 @@ else
     <table class="table">
         <thead>
             <tr>
-                <th>IP Address</th>
+                <th>Unit Name</th>
+                <th>Temp</th>
+                <th>Set Point</th>
+                <th>Mode</th>
             </tr>
         </thead>
         <tbody>
             <tr>
+                <td>@thermostatViewModel.UnitName</td>
                 <td>@thermostatViewModel.State.Temperature</td>
+                <td>@thermostatViewModel.CurrentSetpoint</td>
+                <td>@thermostatViewModel.State.ThermostatMode</td>
             </tr>
         </tbody>
     </table>
 
-    <button class="btn btn-primary">Refresh Devices</button>
+    <button class="btn btn-primary" @onclick="@OnRefreshDevices">Refresh Devices</button>
+    <button class="btn btn-primary">Refresh Status</button>
 }
 
 @code {
-    private List<string>? devices;
 
     protected override async Task OnInitializedAsync()
     {
-        thermostatViewModel.RegisterMessages();
+        thermostatViewModel.PropertyChanged += (sender, args) =>
+        {
+            // the VM uses messaging to start its update. we need to tie in
+            // somehow to update the DOM
+            StateHasChanged();
+        };
 
-        var urm = new UpdateRequestMessage() { SelectedDevice = "192.168.11.156" };
-        var res = WeakReferenceMessenger.Default.Send(urm);
+        // normally done in WPF land when a control is FrameworkElement.Loaded
+        // we set this so that the VM registers for its messages properly.
+        thermostatViewModel.IsActive = true;
+
+        SendUpdateRequestMsg();
     }
+
+    private async Task OnRefreshDevices()
+    {
+        SendUpdateRequestMsg();
+    }
+
+    private void SendUpdateRequestMsg()
+    {
+        var settings = this.settingsService;
+
+        var devices = settings!.GetValue<List<string>>("DiscoveredAddresses");
+
+        foreach (var device in devices!)
+        {
+            var urm = new UpdateRequestMessage() { SelectedDevice = device };
+            var res = WeakReferenceMessenger.Default.Send(urm);    
+        }
+    }
+
 }
