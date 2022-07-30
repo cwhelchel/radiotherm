@@ -26,30 +26,30 @@ namespace RadioThermWpf.Services
 
         public T? GetValue<T>(string key)
         {
-            if (appSettings[key] is JsonValue)
-                return appSettings[key].GetValue<T>();
-            else if (appSettings[key] is JsonArray)
+            if (appSettings?[key] is JsonValue)
+                return appSettings[key]!.GetValue<T>();
+            else if (appSettings?[key] is JsonArray)
             {
-                var arr = appSettings[key].AsArray();
+                var arr = appSettings[key]?.AsArray();
                 return arr.Deserialize<T>();
             }
 
             throw new KeyNotFoundException();
         }
 
-        public void SetValue<T>(string key, T? value)
+        public void SetValue<T>(string key, T value)
         {
-            appSettings[key] = JsonSerializer.SerializeToNode<T>(value);
+            if (appSettings != null) 
+                appSettings[key] = JsonSerializer.SerializeToNode<T>(value);
             Save();
         }
 
         private void Save()
         {
-            using (var writer = new FileStream("settings.json", FileMode.Create))
-            {
-                using (var utfWriter = new Utf8JsonWriter(writer))
-                    appSettings.WriteTo(utfWriter);
-            }
+            using var writer = new FileStream("settings.json", FileMode.Create);
+            using var utfWriter = new Utf8JsonWriter(writer);
+            
+            appSettings?.WriteTo(utfWriter, new JsonSerializerOptions() {WriteIndented = true});
         }
     }
 

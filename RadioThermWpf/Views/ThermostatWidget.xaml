@@ -11,26 +11,33 @@
     <UserControl.Resources>
         <BitmapImage x:Key="coolImage" UriSource="..\icons8-snowflake-48.png" />
         <BitmapImage x:Key="heatImage" UriSource="..\icons8-fire-48.png" />
-        <Style x:Key="labelColor" TargetType="{x:Type Label}">
-            <Setter Property="Foreground" Value="DodgerBlue"/>
-            <Style.Triggers>
-                <DataTrigger Binding="{Binding State.CurrentState}" Value="Heat">
-                    <Setter Property="Foreground" Value="Red" />
-                </DataTrigger>
-            </Style.Triggers>
-        </Style>
+
     </UserControl.Resources>
 
     <Grid>
+
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
+            <!--<RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />-->
         </Grid.RowDefinitions>
 
-        <Label x:Name="Overlay" Background="{StaticResource BackgroundBrush}" Grid.Row="0" Grid.RowSpan="5" Panel.ZIndex="1000">
+        <ListView Grid.Row="0" ItemsSource="{Binding Thermostats}">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <WrapPanel>
+                        <Label Content="{Binding UnitName}" FontSize="16" FontWeight="Bold" VerticalAlignment="Center" Style="{StaticResource labelColor}"/>
+                        <Label Content="{Binding Version}" FontSize="12" FontWeight="Light" FontStyle="Italic" MinWidth="100" VerticalAlignment="Center" Style="{StaticResource labelColor}"/>
+                        <Label Content="{Binding CurrentSetPoint}" FontSize="12" FontWeight="Light" MinWidth="100" VerticalAlignment="Center" Style="{StaticResource labelColor}"/>
+                        <Button Content="Click" Command="{Binding ShowDetailsCommand}"></Button>
+                        <fa:ImageAwesome Height="25" Width="25" Icon="Refresh" Spin="True" Visibility="{Binding Path=IsUpdating, Converter={StaticResource BoolToVis}}" />
+                    </WrapPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <!--<Label x:Name="Overlay" Background="{StaticResource BackgroundBrush}" Grid.Row="0" Grid.RowSpan="5" Panel.ZIndex="1000">
             <Label.Style>
                 <Style TargetType="{x:Type Label}">
                     <Setter Property="Visibility" Value="Collapsed" />
@@ -46,11 +53,11 @@
             </Label.Content>
         </Label>
 
-        <StackPanel Grid.Row="0" Orientation="Horizontal">
+        --><!--<StackPanel Grid.Row="0" Orientation="Horizontal">
             <Label Content="Name:" VerticalAlignment="Center"></Label>
             <Label Content="{Binding UnitName}" FontSize="16" FontWeight="Bold" VerticalAlignment="Center" Style="{StaticResource labelColor}"/>
             <Label Content="{Binding Version}" FontSize="12" FontWeight="Light" FontStyle="Italic" MinWidth="100" VerticalAlignment="Center" Style="{StaticResource labelColor}"/>
-        </StackPanel>
+        </StackPanel>--><!--
 
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
@@ -110,7 +117,7 @@
                     </StackPanel>
                 </Button.Content>
             </Button>
-        </StackPanel>
+        </StackPanel>-->
 
         <!--<fa:ImageAwesome Height="25" Width="25" Grid.Row="5" x:Name="spinner" Icon="Refresh" Spin="True" Visibility="{Binding Path=IsUpdating, Converter={StaticResource BoolToVis}}" />-->
     </Grid>

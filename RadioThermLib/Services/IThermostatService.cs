@@ -9,15 +9,15 @@ namespace RadioThermLib.Services
 {
     public interface IThermostatService
     {
-        Task<ThermostatState?> GetStatusAsync();
+        Task<ThermostatState?> GetStatusAsync(string url);
 
-        Task<string> GetVersionAsync();
+        Task<string> GetVersionAsync(string url);
 
-        Task<string> GetUnitNameAsync();
+        Task<string> GetUnitNameAsync(string url);
 
-        Task SetCoolAsync(float temp);
+        Task SetCoolAsync(string url, float temp);
 
-        Task SetHeatAsync(float temp);
+        Task SetHeatAsync(string url, float temp);
 
         ThermostatError? GetError();
     }

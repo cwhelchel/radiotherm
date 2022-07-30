@@ -9,5 +9,13 @@
         <SolidColorBrush x:Key="BackgroundBrush" Color="AliceBlue" />
         <valcvtr:ThermostatModeToImageValueConverter x:Key="ModeToImage" />
         <valcvtr:ThermostatModeToTextValueConverter x:Key="ModeToText" />
+        <Style x:Key="labelColor" TargetType="{x:Type Label}">
+            <Setter Property="Foreground" Value="DodgerBlue"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding State.CurrentState}" Value="Heat">
+                    <Setter Property="Foreground" Value="Red" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
     </Application.Resources>
 </Application>

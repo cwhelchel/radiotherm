@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using RadioThermWpf.Views;
 
 namespace RadioThermWpf.Services
 {
@@ -15,6 +16,11 @@ namespace RadioThermWpf.Services
         public void ShowDialog(string title, string message)
         {
             MessageBox.Show(message, title);
+        }
+
+        public void ShowThermostatDetails(ThermostatViewModel viewModel)
+        {
+            new ThermostatDetailsWindow(viewModel).Show();
         }
     }
 }
