@@ -120,7 +120,7 @@ namespace RadioThermLib.ViewModels
             }
         }
 
-        private void AddRemote(string ipToAdd)
+        private void AddRemote(string? ipToAdd)
         {
             if (!string.IsNullOrWhiteSpace(ipToAdd))
             {
@@ -145,7 +145,7 @@ namespace RadioThermLib.ViewModels
             }
         }
 
-        private void RemoveRemote(string ipToRemove)
+        private void RemoveRemote(string? ipToRemove)
         {
             if (string.IsNullOrWhiteSpace(ipToRemove))
                 return;

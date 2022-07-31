@@ -1,29 +1,19 @@
-﻿using CommunityToolkit.Mvvm.DependencyInjection;
-using RadioThermLib.Models;
+﻿using RadioThermLib.Models;
 using RadioThermLib.Services;
-using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
-using System.Threading.Tasks;
 
 namespace RadioThermLib.ProvidedServices
 {
     public class ThermostatService : IThermostatService
     {
         private readonly HttpClient client;
-        private string? url;
-        private ISettingsService settingsService;
         private ThermostatError? storedError;
 
         public ThermostatService(ISettingsService settingsService)
         {
-            this.settingsService = settingsService; // Ioc.Default.GetRequiredService<ISettingsService>();
-
-            var msgHandler = this.settingsService.GetHttpMessageHandler();
+            var msgHandler = settingsService.GetHttpMessageHandler();
             this.client = new HttpClient(msgHandler);
             //client.Timeout = TimeSpan.FromSeconds(10.0);
         }
@@ -31,7 +21,6 @@ namespace RadioThermLib.ProvidedServices
         /// <inheritdoc/>
         public async Task<ThermostatState?> GetStatusAsync(string url)
         {
-            this.url = url; // settingsService.GetValue<string>("ThermostatUrl");
             ThermostatState? thermostatState = null;
 
             try
@@ -53,8 +42,6 @@ namespace RadioThermLib.ProvidedServices
 
         public async Task<string> GetUnitNameAsync(string url)
         {
-            this.url = url; // settingsService.GetValue<string>("ThermostatUrl");
-
             var msg = await GetString(url, "/sys/name", "name");
 
             return msg;
@@ -63,8 +50,6 @@ namespace RadioThermLib.ProvidedServices
         /// <inheritdoc/>
         public async Task<string> GetVersionAsync(string url)
         {
-            this.url = url;//settingsService.GetValue<string>("ThermostatUrl");
-
             var msg = await GetString(url, "/tstat/model", "model");
 
             return msg;
@@ -74,9 +59,7 @@ namespace RadioThermLib.ProvidedServices
         public async Task SetCoolAsync(string url, float temp)
         {
             if (temp < 35.0f || temp > 95.0f)
-                throw new ArgumentOutOfRangeException("temp", temp, "valid temperature range input is 35-95 F");
-
-            this.url = url;// settingsService.GetValue<string>("ThermostatUrl");
+                throw new ArgumentOutOfRangeException("temp", temp, strings.ValidTemperatureRangeInputMsg);
 
 
             var jsonObj = new JsonObject
@@ -95,9 +78,7 @@ namespace RadioThermLib.ProvidedServices
         public async Task SetHeatAsync(string url, float temp)
         {
             if (temp < 35.0f || temp > 95.0f)
-                throw new ArgumentOutOfRangeException("temp", temp, "valid temperature range input is 35-95 F");
-
-            this.url = url;//settingsService.GetValue<string>("ThermostatUrl");
+                throw new ArgumentOutOfRangeException("temp", temp, strings.ValidTemperatureRangeInputMsg);
 
             var jsonObj = new JsonObject
             {
@@ -122,9 +103,9 @@ namespace RadioThermLib.ProvidedServices
         {
             string json = await GetJson(url, endpoint);
 
-            JsonNode jn = JsonNode.Parse(json);
+            JsonNode? jn = JsonNode.Parse(json);
 
-            return jn[jsonPropertyName].GetValue<string>().Trim();
+            return jn?[jsonPropertyName]!.GetValue<string>().Trim() ?? string.Empty;
         }
 
         private async Task<string> GetJson(string url, string endpoint)

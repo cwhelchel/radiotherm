@@ -1,4 +1,5 @@
 ﻿
+using System.ComponentModel;
 using System.Text.Json.Serialization;
 
 namespace RadioThermLib.Models;
@@ -15,11 +16,14 @@ public sealed record ThermostatState(
     [property: JsonPropertyName("a_heat")] float AbsoluteHeatSetPoint,
     [property: JsonPropertyName("it_cool")] float TemporaryCoolSetPointNoMode,
     [property: JsonPropertyName("it_heat")] float TemporaryHeatSetPointNoMode,
-    [property: JsonPropertyName("tstate")] ThermostatStateEnum CurrentState,
-    [property: JsonPropertyName("fstate")] FanStateEnum FanState,
+    [property: JsonPropertyName("tstate"), Description(ThermostatState.ObsoleteMsg)] ThermostatStateEnum CurrentState,
+    [property: JsonPropertyName("fstate"), Description("Note: Only available with CT-30")] FanStateEnum FanState,
     [property: JsonPropertyName("time")] TimeObj ThermostatTime,
     [property: JsonPropertyName("t_type_post")] int TargetTempPost
-    );
+    )
+{
+    private const string ObsoleteMsg = "Note: This functionality may not be available in all models of the thermostat.";
+}
 
 public static class Default
 {
