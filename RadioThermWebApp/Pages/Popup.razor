@@ -1,0 +1,70 @@
+﻿
+
+<div class="modal @modalClass" role="dialog"  tabindex="-1" style="display:@modalDisplay; overflow-y: auto;">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">@HeaderText</h5>
+                <button type="button" data-dismiss="modal" aria-label="Close" @onclick="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>@BodyText</p>
+                <input @bind="userInput"/>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" @onclick="Save">Save changes</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" @onclick="Close">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@code {
+
+    private string userInput = "";
+
+    [Parameter]
+    public EventCallback<string> OnClosedCallback { get; set; }
+
+    [Parameter]
+    public string? HeaderText { get; set; }
+
+    [Parameter]
+    public string? BodyText { get; set; }
+
+    private string modalDisplay = "none;";
+    private string modalClass = "";
+
+    public void Show()
+    {
+        modalDisplay = "block;";
+        modalClass = "show";
+        StateHasChanged();
+    }
+
+    private void Save()
+    {
+        string user = userInput;
+        ClearData();
+        OnClosedCallback.InvokeAsync(user);
+        StateHasChanged();
+    }
+
+    private void Close()
+    {
+        ClearData();
+        OnClosedCallback.InvokeAsync(null);
+        StateHasChanged();
+    }
+
+    private void ClearData()
+    {
+        HeaderText = string.Empty;
+        BodyText = string.Empty;
+        modalDisplay = "none;";
+        modalClass = "";
+    }
+}

@@ -1,3 +1,4 @@
+using CommunityToolkit.Mvvm.DependencyInjection;
 using RadioThermWebApp.Data;
 using RadioThermLib;
 using Microsoft.AspNetCore.Components;
@@ -16,10 +17,14 @@ builder.Services.AddSingleton<WeatherForecastService>();
 builder.Services.AddSingleton<ISettingsService, JsonSettingService>();
 builder.Services.AddSingleton<IViewService, ViewService>();
 builder.Services.AddSingleton<IThermostatService, ThermostatService>();
+builder.Services.AddTransient<ThermostatViewModel>();
 builder.Services.AddTransient<ThermostatWidgetViewModel>();
 builder.Services.AddTransient<DiscoveryWidgetViewModel>();
 
 var app = builder.Build();
+
+// hook up the CommunityToolkit Ioc to the .net core stuff
+Ioc.Default.ConfigureServices(builder.Services.BuildServiceProvider());
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

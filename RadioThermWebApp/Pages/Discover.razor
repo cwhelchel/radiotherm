@@ -15,32 +15,68 @@
 }
 else
 {
-    <table class="table">
+    <table class="table table-striped">
         <thead>
-            <tr>
-                <th>IP Address</th>
-            </tr>
+        <tr>
+            <th scope="col" class="col-11">IP Address</th>
+            <th scope="col">Delete</th>
+        </tr>
         </thead>
         <tbody>
-            @foreach (var ip in devices)
-            {
-                <tr>
-                    <td>@ip</td>
-                </tr>
-            }
+        @foreach (var ip in devices)
+        {
+            <tr>
+                <td>@ip</td>
+                <td><button class="btn btn-danger" @onclick="() => OnRemoveButtonClick(ip)"><span class="oi oi-trash"></span></button></td>
+            </tr>
+        }
         </tbody>
     </table>
 
     <button class="btn btn-primary" @onclick="discoverViewModel.StartDiscoveryAsync">Refresh Devices</button>
+    <button class="btn btn-secondary" @onclick="OnAddButtonClick">Add Remote</button>
+    
+    <Popup @ref="popupRef" HeaderText="Manual Address Input" BodyText="Enter IP or Hostname:" OnClosedCallback="OnPopupClosedCallback"  />
 }
 
 @code {
-    private List<string>? devices;
+    private List<string> devices = new();
+    private Popup? popupRef;
+
+    protected bool ShowMyPopup { get; set; } = false;
 
     protected override async Task OnInitializedAsync()
     {
         await discoverViewModel.StartDiscoveryAsync();
 
         this.devices = discoverViewModel.Discovered.ToList<string>();
+    }
+
+    private void OnAddButtonClick()
+    {
+        ShowPopup();
+        StateHasChanged();
+    }
+
+    private void OnRemoveButtonClick(string ip)
+    {
+        this.discoverViewModel.RemoveRemoteCommand.Execute("192.168.11.156");
+        this.devices.Remove(ip);
+        StateHasChanged();
+    }
+
+    private void ShowPopup()
+    {
+        popupRef!.Show();
+    }
+
+    private void OnPopupClosedCallback(string obj)
+    {
+        if (!string.IsNullOrWhiteSpace(obj))
+        {
+            Console.WriteLine(obj);
+            this.devices.Add(obj);
+            this.discoverViewModel.AddRemoteCommand.Execute(obj);
+        }
     }
 }

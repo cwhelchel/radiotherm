@@ -14,7 +14,7 @@
 <h3>Thermostat</h3>
 
 
-@if (thermostatViewModel.State == null || thermostatViewModel.IsUpdating)
+@if (thermostatViewModel.Thermostats == null || thermostatViewModel.IsUpdating)
 {
     <p><em>Loading...</em></p>
 }
@@ -30,20 +30,25 @@ else
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>@thermostatViewModel.UnitName</td>
-                <td>@thermostatViewModel.State.Temperature</td>
-                <td>@thermostatViewModel.CurrentSetpoint</td>
-                <td>@thermostatViewModel.State.ThermostatMode</td>
-            </tr>
+            @foreach (var ts in thermostatViewModel.Thermostats)
+            {
+                <tr>
+                    <td>@ts.UnitName</td>
+                    <td>@ts.State?.Temperature</td>
+                    <td>@ts.CurrentSetPoint</td>
+                    <td>@ts.State?.ThermostatMode</td>
+                </tr>
+            }
         </tbody>
     </table>
 
     <button class="btn btn-primary" @onclick="@OnRefreshDevices">Refresh Devices</button>
-    <button class="btn btn-primary">Refresh Status</button>
+    <button class="btn btn-primary" @onclick="@ShowPopup"></button>
+
 }
 
 @code {
+    private Popup popupRef;
 
     protected override async Task OnInitializedAsync()
     {
@@ -75,8 +80,13 @@ else
         foreach (var device in devices!)
         {
             var urm = new UpdateRequestMessage() { SelectedDevice = device };
-            var res = WeakReferenceMessenger.Default.Send(urm);    
+            var res = WeakReferenceMessenger.Default.Send(urm);
         }
+    }
+
+    private void ShowPopup()
+    {
+        popupRef.Show();
     }
 
 }
