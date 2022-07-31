@@ -1,12 +1,7 @@
-﻿using RadioThermLib.Services;
-using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Specialized;
+using RadioThermLib.Services;
 
-namespace RadioThermLibTests.Services
+namespace RadioThermLibTests.Mocks
 {
     public class MockSettingsService : ISettingsService
     {
@@ -30,9 +25,9 @@ namespace RadioThermLibTests.Services
             return (T)values[key];
         }
 
-        public void SetValue<T>(string key, T? value)
+        public void SetValue<T>(string key, T value)
         {
-            values[key] = value;
+            values[key] = value!;
         }
     }
 }

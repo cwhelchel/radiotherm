@@ -1,15 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using RadioThermLib.ProvidedServices;
 using RadioThermLib.Services;
-using RadioThermLibTests.Services;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RadioThermLib.ProvidedServices.Tests
 {
@@ -21,10 +12,11 @@ namespace RadioThermLib.ProvidedServices.Tests
         {
             var uut = Ioc.Default.GetService<IThermostatService>();
 
-            var status = await uut.GetStatusAsync();
+            var status = await uut!.GetStatusAsync(null!);
 
             Assert.IsNotNull(status);
-            Assert.AreEqual(Models.ThermostatStateEnum.Cool, status.CurrentState);
+            Assert.AreEqual(Models.ThermostatStateEnum.Off, status.CurrentState);
+            Assert.AreEqual(Models.ThermostatModeEnum.Cool, status.ThermostatMode);
             Assert.AreEqual(69.0f, status.Temperature);
         }
 
@@ -33,14 +25,14 @@ namespace RadioThermLib.ProvidedServices.Tests
         {
             var uut = Ioc.Default.GetService<IThermostatService>();
 
-            var version = await uut.GetVersionAsync();
+            var version = await uut!.GetVersionAsync(null!);
 
             Assert.IsNotNull(version);
             Assert.IsFalse(string.IsNullOrWhiteSpace(version));
-            
+
             // probably diff for everyone else
             Assert.AreEqual("CT69 V6.9", version);
-            
+
             Console.WriteLine(version);
         }
 
@@ -49,9 +41,9 @@ namespace RadioThermLib.ProvidedServices.Tests
         {
             var uut = Ioc.Default.GetService<IThermostatService>();
 
-            await uut.SetCoolAsync(72.0f);
+            await uut!.SetCoolAsync(null!, 72.0f);
 
-            var status = await uut.GetStatusAsync();
+            var status = await uut.GetStatusAsync(null!);
             Assert.IsNotNull(status);
             Assert.AreEqual(Models.ThermostatStateEnum.Cool, status.CurrentState);
             Assert.AreEqual(72.0f, status.TemporaryCoolSetPoint);
@@ -62,9 +54,9 @@ namespace RadioThermLib.ProvidedServices.Tests
         {
             var uut = Ioc.Default.GetService<IThermostatService>();
 
-            await uut.SetHeatAsync(72.0f);
+            await uut!.SetHeatAsync(null!, 72.0f);
 
-            var status = await uut.GetStatusAsync();
+            var status = await uut.GetStatusAsync(null!);
             Assert.IsNotNull(status);
             Assert.AreEqual(Models.ThermostatStateEnum.Heat, status.CurrentState);
             Assert.AreEqual(72.0f, status.TemporaryHeatSetPoint);

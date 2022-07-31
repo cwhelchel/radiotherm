@@ -1,13 +1,10 @@
-﻿using RadioThermLib.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json;
+﻿using System.Text.Json;
 using System.Text.Json.Nodes;
-using System.Threading.Tasks;
+using RadioThermLib.Models;
 
-namespace RadioThermLibTests.Services
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+
+namespace RadioThermLibTests.Mocks
 {
     public class MockHttpMessageHandler : HttpMessageHandler
     {
@@ -41,9 +38,9 @@ namespace RadioThermLibTests.Services
             }
             else if (request.Method == HttpMethod.Post)
             {
-                if (request.RequestUri.AbsolutePath == statusUri.AbsolutePath)
+                if (request.RequestUri?.AbsolutePath == statusUri.AbsolutePath)
                 {
-                    var c = await request.Content.ReadAsStringAsync();
+                    var c = await request.Content!.ReadAsStringAsync();
                     var jnode = JsonSerializer.Deserialize<JsonNode>(c);
 
                     if (jnode["t_heat"] != null)
