@@ -26,5 +26,6 @@ namespace RadioThermLib.Services
     {
         public Type? ExceptionType { get; init; }
         public string? ErrorMessage { get; init; }
+        public Exception ExceptionObj { get; set; }
     }
 }

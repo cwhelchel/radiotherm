@@ -34,7 +34,7 @@ namespace RadioThermLib.ProvidedServices
             catch (Exception ex)
             {
                 thermostatState = null;
-                storedError = new ThermostatError { ErrorMessage = ex.Message, ExceptionType = ex.GetType() };
+                storedError = new ThermostatError { ErrorMessage = ex.Message, ExceptionType = ex.GetType(), ExceptionObj = ex };
             }
 
             return thermostatState;
@@ -92,6 +92,7 @@ namespace RadioThermLib.ProvidedServices
             response.EnsureSuccessStatusCode();
         }
 
+        /// <inheritdoc/>
         public ThermostatError? GetError()
         {
             var copy = this.storedError;

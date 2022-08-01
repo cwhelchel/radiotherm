@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -97,9 +98,18 @@ namespace RadioThermLib.ViewModels
 
             IsUpdating = true;
 
-            bool ok = await FetchData();
+            try
+            {
+                bool ok = await FetchData();
 
-            this.HasError = !ok;
+                this.HasError = !ok;
+            }
+            catch (Exception ex)
+            {
+                this.HasError = true;
+                ShowError(ex);
+                Console.WriteLine(ex);
+            }
 
             IsUpdating = false;
         }
@@ -174,8 +184,14 @@ namespace RadioThermLib.ViewModels
         private void ShowServiceError()
         {
             var error = thermostatService.GetError();
+            Debug.Assert(error != null, nameof(error) + " != null");
+            ShowError(error.ExceptionObj);
+        }
+
+        private void ShowError(Exception error)
+        {
             var msg =
-                $"Error Getting Thermostat Status\r\nType: {error?.ExceptionType}\r\n\r\nError: {error?.ErrorMessage}";
+                $"Error Getting Thermostat Status\r\nType: {error.GetType()}\r\n\r\nError: {error.Message}";
             this.viewService.ShowDialog("Error Updating", msg);
         }
     }
