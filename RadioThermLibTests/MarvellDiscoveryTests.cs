@@ -7,7 +7,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RadioThermLib.Tests
+namespace RadioThermLibTests
 {
     [TestClass()]
     public class MarvellDiscoveryTests

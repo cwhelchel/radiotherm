@@ -16,14 +16,24 @@ namespace RadioThermLibTests.Mocks
 
         public MockHttpMessageHandler()
         {
-            currentState = Default.EmptyState with { CurrentState = ThermostatStateEnum.Off, Temperature = 69.0f, TemporaryHeatSetPoint = 666.999f};
+            currentState = Default.EmptyState with { CurrentState = ThermostatStateEnum.Off, ThermostatMode = ThermostatModeEnum.Cool, Temperature = 69.0f, TemporaryHeatSetPoint = 666.999f};
 
             var json = JsonSerializer.Serialize(currentState);
             sc = new StringContent(json);
         }
 
+        /// <summary>
+        /// Set this to cause an exception in <see cref="SendAsync"/>
+        /// </summary>
+        public bool ThrowError { get; set; } = false;
+
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
+            if (ThrowError)
+            {
+                throw new MockException();
+            }
+
             if (request.Method == HttpMethod.Get)
             {
                 if (request.RequestUri == statusUri)
@@ -78,4 +88,6 @@ namespace RadioThermLibTests.Mocks
             return response;
         }
     }
+
+    public class MockException : Exception{}
 }

@@ -1,18 +1,23 @@
-﻿using CommunityToolkit.Mvvm.DependencyInjection;
+﻿using RadioThermLib.ProvidedServices;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RadioThermLib.Services;
+using RadioThermLibTests.Mocks;
 
 namespace RadioThermLib.ProvidedServices.Tests
 {
     [TestClass()]
     public class ThermostatServiceTests
     {
+        private const string TestUrl = "http://notreallyreal";
+
         [TestMethod()]
         public async Task GetStatusAsyncTest()
         {
-            var uut = Ioc.Default.GetService<IThermostatService>();
-
-            var status = await uut!.GetStatusAsync(null!);
+            var settings = Ioc.Default.GetRequiredService<ISettingsService>();
+            var uut = new ThermostatService(settings);
+            
+            var status = await uut!.GetStatusAsync(TestUrl);
 
             Assert.IsNotNull(status);
             Assert.AreEqual(Models.ThermostatStateEnum.Off, status.CurrentState);
@@ -23,9 +28,10 @@ namespace RadioThermLib.ProvidedServices.Tests
         [TestMethod()]
         public async Task GetVersionAsyncTest()
         {
-            var uut = Ioc.Default.GetService<IThermostatService>();
+            var settings = Ioc.Default.GetRequiredService<ISettingsService>();
+            var uut = new ThermostatService(settings);
 
-            var version = await uut!.GetVersionAsync(null!);
+            var version = await uut!.GetVersionAsync(TestUrl);
 
             Assert.IsNotNull(version);
             Assert.IsFalse(string.IsNullOrWhiteSpace(version));
@@ -39,11 +45,12 @@ namespace RadioThermLib.ProvidedServices.Tests
         [TestMethod()]
         public async Task SetCoolAsyncTest()
         {
-            var uut = Ioc.Default.GetService<IThermostatService>();
+            var settings = Ioc.Default.GetRequiredService<ISettingsService>();
+            var uut = new ThermostatService(settings);
 
-            await uut!.SetCoolAsync(null!, 72.0f);
+            await uut!.SetCoolAsync(TestUrl, 72.0f);
 
-            var status = await uut.GetStatusAsync(null!);
+            var status = await uut.GetStatusAsync(TestUrl);
             Assert.IsNotNull(status);
             Assert.AreEqual(Models.ThermostatStateEnum.Cool, status.CurrentState);
             Assert.AreEqual(72.0f, status.TemporaryCoolSetPoint);
@@ -52,14 +59,35 @@ namespace RadioThermLib.ProvidedServices.Tests
         [TestMethod()]
         public async Task SetHeatAsyncTest()
         {
-            var uut = Ioc.Default.GetService<IThermostatService>();
+            var settings = Ioc.Default.GetRequiredService<ISettingsService>();
+            var uut = new ThermostatService(settings);
 
-            await uut!.SetHeatAsync(null!, 72.0f);
+            await uut!.SetHeatAsync(TestUrl, 72.0f);
 
-            var status = await uut.GetStatusAsync(null!);
+            var status = await uut.GetStatusAsync(TestUrl);
             Assert.IsNotNull(status);
             Assert.AreEqual(Models.ThermostatStateEnum.Heat, status.CurrentState);
             Assert.AreEqual(72.0f, status.TemporaryHeatSetPoint);
+        }
+
+        [TestMethod()]
+        public void GetErrorTest()
+        {
+            var settings = Ioc.Default.GetRequiredService<ISettingsService>();
+            var http = settings.GetHttpMessageHandler() as MockHttpMessageHandler;
+            http!.ThrowError = true;
+            
+            var uut = new ThermostatService(settings);
+
+            Assert.ThrowsExceptionAsync<MockException>(() => uut.GetStatusAsync(TestUrl));
+
+            var error = uut!.GetError();
+
+            Assert.IsNotNull(error);
+            Assert.IsTrue(error.ExceptionObj is MockException);
+            Assert.IsFalse(string.IsNullOrWhiteSpace(error.ErrorMessage));
+
+            http!.ThrowError = false;
         }
     }
 }

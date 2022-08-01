@@ -8,14 +8,20 @@ namespace RadioThermLibTests.Mocks
     internal class MockThermostatService : IThermostatService
     {
         ThermostatState state;
+
         public MockThermostatService()
         {
             // we need a mode so we can mock setting the temp. vm will not move it from off to cool or heat
             state = Default.EmptyState with { ThermostatMode = ThermostatModeEnum.Cool };
         }
 
+        public bool ThrowErrorInGetStatus { get; set; } = false;
+
         public async Task<ThermostatState?> GetStatusAsync(string url)
         {
+            if (ThrowErrorInGetStatus)
+                throw new TimeoutException("Unit Test Exception");
+
             return state with { Temperature = 69.0f };
         }
 
@@ -26,7 +32,7 @@ namespace RadioThermLibTests.Mocks
 
         public async Task<string> GetUnitNameAsync(string url)
         {
-            return "Unit Name Test";
+            return "Unit Name - Test";
         }
 
         public async Task SetCoolAsync(string url, float temp)

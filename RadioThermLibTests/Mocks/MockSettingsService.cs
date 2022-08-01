@@ -7,8 +7,9 @@ namespace RadioThermLibTests.Mocks
     {
         bool setup = false;
         Dictionary<string, object> values = new Dictionary<string, object>();
+        MockHttpMessageHandler mockHttpMessageHandler = new MockHttpMessageHandler();
 
-        public HttpMessageHandler GetHttpMessageHandler() => new MockHttpMessageHandler();
+        public HttpMessageHandler GetHttpMessageHandler() => mockHttpMessageHandler;
 
         public T? GetValue<T>(string key)
         {
@@ -17,7 +18,6 @@ namespace RadioThermLibTests.Mocks
                 // these values should be changed for future tests
                 values["DiscoveryTimeout"] = 1000;
                 values["LocalIpAddress"] = "192.168.11.2";
-                values["ThermostatUrl"] = "http://notreallyreal";
                 values["ThermostatUrls"] = new StringCollection() { "http://192.168.11.156", "http://192.168.11.157" };
                 setup = true;
             }
