@@ -1,11 +1,7 @@
 ﻿@page "/thermostat"
+
 @using CommunityToolkit.Mvvm.Messaging
-@using RadioThermLib;
-@using RadioThermLib.ViewModels;
-@using System.Net.Sockets
-@using System.Net
-@using CommunityToolkit.Mvvm.DependencyInjection
-@using RadioThermLib.Models
+@using RadioThermLib.ViewModels
 @using RadioThermLib.Services
 
 @inject ThermostatWidgetViewModel thermostatViewModel
@@ -13,6 +9,11 @@
 
 <h3>Thermostat</h3>
 
+
+@if (HasError)
+{
+    <p><em>There was an error when updating thermostat states.</em></p>
+}
 
 @if (thermostatViewModel.Thermostats == null || thermostatViewModel.IsUpdating)
 {
@@ -32,12 +33,19 @@ else
         <tbody>
             @foreach (var ts in thermostatViewModel.Thermostats)
             {
-                <tr>
-                    <td>@ts.UnitName</td>
-                    <td>@ts.State?.Temperature</td>
-                    <td>@ts.CurrentSetPoint</td>
-                    <td>@ts.State?.ThermostatMode</td>
-                </tr>
+                @if (ts.HasError)
+                {
+                    <tr><td><em>Error retrieving data!</em></td></tr>
+                }
+                else
+                {
+                    <tr>
+                        <td>@ts.UnitName</td>
+                        <td>@ts.State?.Temperature</td>
+                        <td>@ts.CurrentSetPoint</td>
+                        <td>@ts.State?.ThermostatMode</td>
+                    </tr>
+                }
             }
         </tbody>
     </table>
@@ -50,6 +58,9 @@ else
 @code {
     private Popup popupRef;
 
+    [CascadingParameter]
+    protected bool HasError { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
         thermostatViewModel.PropertyChanged += (sender, args) =>
@@ -58,6 +69,8 @@ else
             // somehow to update the DOM
             StateHasChanged();
         };
+
+        HasError = false;
 
         // normally done in WPF land when a control is FrameworkElement.Loaded
         // we set this so that the VM registers for its messages properly.

@@ -1,4 +1,9 @@
 ﻿@inherits LayoutComponentBase
+@using RadioThermWebApp.Pages
+@using RadioThermWebApp.Services
+@using RadioThermLib.Services
+
+@inject IViewService viewService
 
 <PageTitle>RadioThermWebApp</PageTitle>
 
@@ -12,8 +17,36 @@
             <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
         </div>
 
-        <article class="content px-4">
-            @Body
-        </article>
+        <ViewServicePopup @ref="vsPopup"></ViewServicePopup>
+
+        <CascadingValue Value="@HasError">
+            <article class="content px-4">
+                @Body
+            </article>
+        </CascadingValue>
     </main>
 </div>
+
+@code
+{
+    ViewServicePopup vsPopup;
+
+    private bool HasError  = false;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        (viewService as ViewService).OnShowDialog += OnShowDialog;
+
+    }
+
+    private void OnShowDialog(object? sender, ShowDialogsEventArgs e)
+    {
+        if (e == null) return;
+
+        vsPopup.Show(e.Title, e.Message);
+        HasError = true;
+        StateHasChanged();
+    }
+}

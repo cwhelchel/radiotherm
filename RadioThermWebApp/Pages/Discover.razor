@@ -33,11 +33,12 @@ else
         </tbody>
     </table>
 
-    <button class="btn btn-primary" @onclick="discoverViewModel.StartDiscoveryAsync">Refresh Devices</button>
+    <button class="btn btn-primary" @onclick="DiscoverDevices">Refresh Devices</button>
     <button class="btn btn-secondary" @onclick="OnAddButtonClick">Add Remote</button>
     
     <Popup @ref="popupRef" HeaderText="Manual Address Input" BodyText="Enter IP or Hostname:" OnClosedCallback="OnPopupClosedCallback"  />
 }
+
 
 @code {
     private List<string> devices = new();
@@ -46,6 +47,11 @@ else
     protected bool ShowMyPopup { get; set; } = false;
 
     protected override async Task OnInitializedAsync()
+    {
+        await DiscoverDevices();
+    }
+
+    private async Task DiscoverDevices()
     {
         await discoverViewModel.StartDiscoveryAsync();
 
@@ -60,7 +66,7 @@ else
 
     private void OnRemoveButtonClick(string ip)
     {
-        this.discoverViewModel.RemoveRemoteCommand.Execute("192.168.11.156");
+        this.discoverViewModel.RemoveRemoteCommand.Execute(ip);
         this.devices.Remove(ip);
         StateHasChanged();
     }

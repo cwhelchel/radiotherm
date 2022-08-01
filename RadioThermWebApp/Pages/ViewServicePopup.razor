@@ -11,10 +11,8 @@
             </div>
             <div class="modal-body">
                 <p>@BodyText</p>
-                <input @bind="userInput"/>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-dismiss="modal" @onclick="Save">Save changes</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal" @onclick="Close">Close</button>
             </div>
         </div>
@@ -23,11 +21,6 @@
 
 
 @code {
-
-    private string userInput = "";
-
-    [Parameter]
-    public EventCallback<string> OnClosedCallback { get; set; }
 
     [Parameter]
     public string? HeaderText { get; set; }
@@ -38,24 +31,18 @@
     private string modalDisplay = "none;";
     private string modalClass = "";
 
-    public void Show()
+    public void Show(string header, string body)
     {
+        this.HeaderText = header;
+        this.BodyText = body;
         modalDisplay = "block;";
         modalClass = "show";
         StateHasChanged();
     }
 
-    private void Save()
-    {
-        string user = userInput;
-        ClearData();
-        OnClosedCallback.InvokeAsync(user);
-    }
-
     private void Close()
     {
         ClearData();
-        OnClosedCallback.InvokeAsync(null);
     }
 
     private void ClearData()
