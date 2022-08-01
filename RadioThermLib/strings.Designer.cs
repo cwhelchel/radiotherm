@@ -61,6 +61,24 @@ namespace RadioThermLib {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Error Updating Devices.
+        /// </summary>
+        internal static string ErrUpdatingMsg {
+            get {
+                return ResourceManager.GetString("ErrUpdatingMsg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error Updating.
+        /// </summary>
+        internal static string ErrUpdatingTitle {
+            get {
+                return ResourceManager.GetString("ErrUpdatingTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to valid temperature range input is 35-95 F.
         /// </summary>
         internal static string ValidTemperatureRangeInputMsg {

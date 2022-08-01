@@ -23,6 +23,7 @@ namespace RadioThermLib.ViewModels
         private string? version;
         private string? thermostatIp;
         private string? thermostatUrl;
+        private bool hasError;
 
         public ThermostatViewModel(ISettingsService settingsService, IThermostatService thermostatService, IViewService viewService)
         {
@@ -78,6 +79,12 @@ namespace RadioThermLib.ViewModels
             set => SetProperty(ref thermostatIp, value);
         }
 
+        public bool HasError
+        {
+            get => hasError;
+            set => SetProperty(ref hasError, value);
+        }
+
         /// <summary>
         /// Updates the Thermostat's <see cref="State"/>.
         /// </summary>
@@ -90,7 +97,9 @@ namespace RadioThermLib.ViewModels
 
             IsUpdating = true;
 
-            await FetchData();
+            bool ok = await FetchData();
+
+            this.HasError = !ok;
 
             IsUpdating = false;
         }

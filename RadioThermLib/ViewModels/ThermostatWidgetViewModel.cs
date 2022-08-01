@@ -10,14 +10,16 @@ namespace RadioThermLib.ViewModels
     public class ThermostatWidgetViewModel : ObservableRecipient
     {
         private readonly ISettingsService settingsService;
+        private readonly IViewService viewService;
         private ObservableCollection<ThermostatViewModel> thermostatVms = null!;
         private bool isUpdating;
         private object respLock = new object();
 
 
-        public ThermostatWidgetViewModel(ISettingsService settingsService)
+        public ThermostatWidgetViewModel(ISettingsService settingsService, IViewService viewService)
         {
             this.settingsService = settingsService;
+            this.viewService = viewService;
             Thermostats = new ObservableCollection<ThermostatViewModel>();
         }
 
@@ -47,7 +49,16 @@ namespace RadioThermLib.ViewModels
             MessageHandler<ThermostatWidgetViewModel, UpdateRequestMessage> handler = async (r, m) =>
             {
                 // run the update and respond true.
-                await UpdateAllDevices();
+                try
+                {
+                    await UpdateAllDevices();
+                }
+                catch (Exception ex)
+                {
+                    string msg = RadioThermLib.strings.ErrUpdatingMsg;
+                    this.viewService.ShowDialog(RadioThermLib.strings.ErrUpdatingTitle, $"{msg}: {ex.Message}");
+                    this.IsUpdating = false;
+                }
 
                 lock (respLock)
                 {

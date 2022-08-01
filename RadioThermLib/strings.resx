@@ -100,4 +100,10 @@
   <data name="ValidTemperatureRangeInputMsg" xml:space="preserve">
     <value>valid temperature range input is 35-95 F</value>
   </data>
+  <data name="ErrUpdatingTitle" xml:space="preserve">
+    <value>Error Updating</value>
+  </data>
+  <data name="ErrUpdatingMsg" xml:space="preserve">
+    <value>Error Updating Devices</value>
+  </data>
 </root>
