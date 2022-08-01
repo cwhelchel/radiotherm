@@ -18,107 +18,32 @@
 
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-            <!--<RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />-->
         </Grid.RowDefinitions>
 
         <ListView Grid.Row="0" ItemsSource="{Binding Thermostats}">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <WrapPanel>
-                        <Label Content="{Binding UnitName}" FontSize="16" FontWeight="Bold" VerticalAlignment="Center" Style="{StaticResource labelColor}"/>
-                        <Label Content="{Binding Version}" FontSize="12" FontWeight="Light" FontStyle="Italic" MinWidth="100" VerticalAlignment="Center" Style="{StaticResource labelColor}"/>
-                        <Label Content="{Binding CurrentSetPoint}" FontSize="12" FontWeight="Light" MinWidth="100" VerticalAlignment="Center" Style="{StaticResource labelColor}"/>
+                        <WrapPanel.Resources>
+                            <Style TargetType="{x:Type fa:ImageAwesome}">
+                                <Setter Property="Height" Value="25" />
+                                <Setter Property="Width" Value="25" />
+                            </Style>
+                        </WrapPanel.Resources>
+                        <Label Content="{Binding UnitName}" VerticalAlignment="Center"
+                               Style="{StaticResource labelTitle}" />
+                        <Label Content="{Binding Version}" MinWidth="100" VerticalAlignment="Center"
+                               Style="{StaticResource labelSubtitle}" />
+                        <Label Content="{Binding CurrentSetPoint}" MinWidth="100" VerticalAlignment="Center"
+                               Style="{StaticResource labelText}" />
                         <Button Content="Click" Command="{Binding ShowDetailsCommand}"></Button>
-                        <fa:ImageAwesome Height="25" Width="25" Icon="Refresh" Spin="True" Visibility="{Binding Path=IsUpdating, Converter={StaticResource BoolToVis}}" />
+                        <fa:ImageAwesome Icon="Refresh" Spin="True"
+                                         Visibility="{Binding Path=IsUpdating, Converter={StaticResource BoolToVis}}" />
+                        <fa:ImageAwesome Icon="Exclamation" Foreground="Red"
+                                         Visibility="{Binding Path=HasError, Converter={StaticResource BoolToVis}}" />
                     </WrapPanel>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-        <!--<Label x:Name="Overlay" Background="{StaticResource BackgroundBrush}" Grid.Row="0" Grid.RowSpan="5" Panel.ZIndex="1000">
-            <Label.Style>
-                <Style TargetType="{x:Type Label}">
-                    <Setter Property="Visibility" Value="Collapsed" />
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding IsUpdating}" Value="True">
-                            <Setter Property="Visibility" Value="{Binding Path=IsUpdating, Converter={StaticResource BoolToVis}}" />
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </Label.Style>
-            <Label.Content>
-                <fa:ImageAwesome Height="25" Width="25" Icon="Refresh" Spin="True" Visibility="{Binding Path=IsUpdating, Converter={StaticResource BoolToVis}}" />
-            </Label.Content>
-        </Label>
-
-        --><!--<StackPanel Grid.Row="0" Orientation="Horizontal">
-            <Label Content="Name:" VerticalAlignment="Center"></Label>
-            <Label Content="{Binding UnitName}" FontSize="16" FontWeight="Bold" VerticalAlignment="Center" Style="{StaticResource labelColor}"/>
-            <Label Content="{Binding Version}" FontSize="12" FontWeight="Light" FontStyle="Italic" MinWidth="100" VerticalAlignment="Center" Style="{StaticResource labelColor}"/>
-        </StackPanel>--><!--
-
-        <Grid Grid.Row="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition />
-                <ColumnDefinition />
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition/>
-                <RowDefinition />
-            </Grid.RowDefinitions>
-
-            <StackPanel Grid.Column="0" 
-                        Grid.Row="0"
-                        Orientation="Horizontal" >
-                <Label Content="Indoor Temperature:" VerticalAlignment="Center"/>
-                <Label Content="{Binding State.Temperature}" FontSize="24" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{StaticResource labelColor}"  ContentStringFormat="{}{0}°"/>
-            </StackPanel>
-
-            <StackPanel Grid.Column="1"
-                        Grid.Row="0" 
-                        Orientation="Horizontal">
-                <Label Content="Target Temperature:" VerticalAlignment="Center" />
-                <Label Content="{Binding CurrentSetpoint}" VerticalAlignment="Center" FontSize="24" Style="{StaticResource labelColor}" ContentStringFormat="{}{0}°"/>
-                <Label VerticalAlignment="Center" FontStyle="Italic" FontSize="10">
-                    <Label.Style>
-                        <Style TargetType="Label" BasedOn="{StaticResource labelColor}">
-                            <Setter Property="Content" Value="Programmed" />
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding State.IsOverride}" Value="1">
-                                    <Setter Property="Content" Value="Temporary" />
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </Label.Style>
-                </Label>
-            </StackPanel>
-
-            <StackPanel Grid.Row="1" 
-                        Grid.Column="1"
-                        Orientation="Horizontal">
-                <Label Content="New Setpoint:" VerticalAlignment="Center"/>
-                <TextBox BorderBrush="Black" Height="30" Width="35" Name="txtSetPoint" HorizontalAlignment="Left" VerticalAlignment="Center" Text="{Binding CurrentSetpoint, Mode=OneTime}" />
-                <Button HorizontalAlignment="Left" 
-                        VerticalAlignment="Center"
-                        Margin="10,0,0,0"
-                        Height="29" Content="Set Temp" Command="{Binding SetTemperatureCommand}" CommandParameter="{Binding ElementName=txtSetPoint, Path=Text}"/>
-            </StackPanel>
-        </Grid>
-
-
-        <StackPanel Grid.Row="4" Orientation="Horizontal">
-            <Button HorizontalAlignment="Left" VerticalAlignment="Top" MinWidth="65" ToolTip="Toggle Mode">
-                <Button.Content>
-                    <StackPanel>
-                        <Image Source="{Binding State.ThermostatMode, Converter={StaticResource ModeToImage}}"/>
-                        <Label Content="{Binding State.ThermostatMode, Converter={StaticResource ModeToText}}" HorizontalAlignment="Center" />
-                    </StackPanel>
-                </Button.Content>
-            </Button>
-        </StackPanel>-->
-
-        <!--<fa:ImageAwesome Height="25" Width="25" Grid.Row="5" x:Name="spinner" Icon="Refresh" Spin="True" Visibility="{Binding Path=IsUpdating, Converter={StaticResource BoolToVis}}" />-->
-    </Grid>
+  </Grid>
 </UserControl>

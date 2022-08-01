@@ -17,11 +17,11 @@ using System.Windows.Shapes;
 namespace RadioThermWpf.Views
 {
     /// <summary>
-    /// Interaction logic for ThermostatWindow.xaml
+    /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class ThermostatWindow : Window
+    public partial class MainWindow : Window
     {
-        public ThermostatWindow()
+        public MainWindow()
         {
             InitializeComponent();
         }
