@@ -21,6 +21,7 @@ namespace RadioThermLib.ViewModels
         private readonly ISettingsService settingsService;
         private readonly IViewService viewService;
         private bool isDiscovering;
+        private bool alreadyDiscovered = false;
         private ObservableCollection<string> discovered;
         private string selectedDevice;
 
@@ -30,7 +31,7 @@ namespace RadioThermLib.ViewModels
             this.viewService = viewService;
             this.discovered = new ObservableCollection<string>();
             this.selectedDevice = String.Empty;
-            StartDiscoveryCommand = new AsyncRelayCommand(StartDiscoveryAsync);
+            StartDiscoveryCommand = new AsyncRelayCommand<bool>(StartDiscoveryAsync);
             RequestUpdateCommand = new RelayCommand(RequestUpdate);
             AddRemoteCommand = new RelayCommand<string>(AddRemote);
             RemoveRemoteCommand = new RelayCommand<string>(RemoveRemote);
@@ -59,10 +60,13 @@ namespace RadioThermLib.ViewModels
         public IRelayCommand AddRemoteCommand { get; }
         public IRelayCommand RemoveRemoteCommand { get; }
 
-        public async Task StartDiscoveryAsync()
+        public async Task StartDiscoveryAsync(bool force = true)
         {
             int timeout = this.settingsService.GetValue<int>("DiscoveryTimeout");
             var manualEntries = this.settingsService.GetValue<List<string>>("ManualAddresses");
+
+            if (alreadyDiscovered && !force)
+                return;
 
             IsDiscovering = true;
 
@@ -71,38 +75,43 @@ namespace RadioThermLib.ViewModels
             if (localIp == null)
                 return;
 
+            await DiscoverDevices(localIp, timeout);
+
+            var toSave = new List<string>(Discovered);
+            this.settingsService.SetValue("DiscoveredAddresses", toSave);
+
+            foreach (var manual in manualEntries!)
+            {
+                Discovered.Add(manual);
+            }
+
+            IsDiscovering = false;
+
+            // set a flag saying we got something
+            alreadyDiscovered = Discovered.Count > 0;
+        }
+
+        public void RequestUpdate()
+        {
+            if (string.IsNullOrEmpty(SelectedDevice))
+                return;
+
+            var urm = new UpdateRequestMessage() { SelectedDevice = this.SelectedDevice };
+            var res = WeakReferenceMessenger.Default.Send(urm);
+        }
+
+        private async Task DiscoverDevices(string localIp, int timeout)
+        {
             using (var v = new MarvellDiscovery(IPAddress.Parse(localIp), timeout))
             {
-                await Task.Run(() =>
-                {
-                    v.Discover();
-                });
+                await Task.Run(() => { v.Discover(); });
 
                 foreach (var ip in v.DiscoveredDevices)
                 {
                     if (!string.IsNullOrWhiteSpace(ip.ToString()))
                         Discovered.Add(ip.ToString());
                 }
-
-                var toSave = new List<string>(Discovered);
-                this.settingsService.SetValue("DiscoveredAddresses", toSave);
-
-                foreach (var manual in manualEntries!)
-                {
-                    Discovered.Add(manual);
-                }
             }
-
-            IsDiscovering = false;
-        }
-
-        public void RequestUpdate()
-        {
-            if (string.IsNullOrEmpty(SelectedDevice)) 
-                return;
-
-            var urm = new UpdateRequestMessage() {  SelectedDevice = this.SelectedDevice };
-            var res = WeakReferenceMessenger.Default.Send(urm);
         }
 
         private static string? GetLocalIpAddress()
@@ -161,7 +170,8 @@ namespace RadioThermLib.ViewModels
     /// <summary>
     /// Message to request an update.
     /// </summary>
-    public sealed class UpdateRequestMessage : RequestMessage<bool> {
+    public sealed class UpdateRequestMessage : RequestMessage<bool>
+    {
         public string SelectedDevice { get; init; } = "";
     }
 }

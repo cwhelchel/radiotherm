@@ -3,37 +3,53 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:RadioThermWpf"
              xmlns:valcvtr="clr-namespace:RadioThermWpf.ValueConverters"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              StartupUri="Views\MainWindow.xaml">
     <Application.Resources>
-        <BooleanToVisibilityConverter x:Key="BoolToVis" />
-        <SolidColorBrush x:Key="BackgroundBrush" Color="AliceBlue" />
-        <valcvtr:ThermostatModeToImageValueConverter x:Key="ModeToImage" />
-        <valcvtr:ThermostatModeToTextValueConverter x:Key="ModeToText" />
-        
-        <!--
+
+        <ResourceDictionary x:Key="ResourceDictionary">
+            <ResourceDictionary.MergedDictionaries>
+                <materialDesign:BundledTheme BaseTheme="Light" 
+                                             PrimaryColor="BlueGrey" 
+                                             SecondaryColor="LightBlue"
+                                             ColorAdjustment="{materialDesign:ColorAdjustment}" />
+                <!--<ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />-->
+
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+
+            <BooleanToVisibilityConverter x:Key="BoolToVis" />
+            <!--<SolidColorBrush x:Key="BackgroundBrush" Color="{Binding Color, Source={StaticResource MaterialDesignBackground}}" />-->
+            <valcvtr:ThermostatModeToImageValueConverter x:Key="ModeToImage" />
+            <valcvtr:ThermostatModeToTextValueConverter x:Key="ModeToText" />
+
+            <!--
             Label styles
         -->
-        <Style x:Key="labelColor" TargetType="{x:Type Label}">
-            <Setter Property="Foreground" Value="DodgerBlue"/>
-            <Style.Triggers>
-                <DataTrigger Binding="{Binding State.CurrentState}" Value="Heat">
-                    <Setter Property="Foreground" Value="Red" />
-                </DataTrigger>
-            </Style.Triggers>
-        </Style>
-        <Style x:Key="labelTitle" BasedOn="{StaticResource labelColor}" TargetType="{x:Type Label}">
-            <Setter Property="FontSize" Value="16"/>
-            <Setter Property="FontWeight" Value="Bold" />
-        </Style>
-        <Style x:Key="labelSubtitle" BasedOn="{StaticResource labelColor}" TargetType="{x:Type Label}">
-            <Setter Property="FontSize" Value="12"/>
-            <Setter Property="FontWeight" Value="Light" />
-            <Setter Property="FontStyle" Value="Italic" />
-        </Style>
-        <Style x:Key="labelText" BasedOn="{StaticResource labelColor}" TargetType="{x:Type Label}">
-            <Setter Property="FontSize" Value="12"/>
-            <Setter Property="FontWeight" Value="Light" />
-        </Style>
+            <Style x:Key="labelColor" TargetType="{x:Type Label}">
+                <Setter Property="Foreground" Value="DodgerBlue"/>
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding State.CurrentState}" Value="Heat">
+                        <Setter Property="Foreground" Value="Red" />
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+            <Style x:Key="labelTitle" BasedOn="{StaticResource labelColor}" TargetType="{x:Type Label}">
+                <Setter Property="FontSize" Value="16"/>
+                <Setter Property="FontWeight" Value="Bold" />
+            </Style>
+            <Style x:Key="labelSubtitle" BasedOn="{StaticResource labelColor}" TargetType="{x:Type Label}">
+                <Setter Property="FontSize" Value="12"/>
+                <Setter Property="FontWeight" Value="Light" />
+                <Setter Property="FontStyle" Value="Italic" />
+            </Style>
+            <Style x:Key="labelText" BasedOn="{StaticResource labelColor}" TargetType="{x:Type Label}">
+                <Setter Property="FontSize" Value="12"/>
+                <Setter Property="FontWeight" Value="Light" />
+            </Style>
 
+        </ResourceDictionary>
     </Application.Resources>
 </Application>

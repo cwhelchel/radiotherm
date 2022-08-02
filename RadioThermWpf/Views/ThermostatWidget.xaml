@@ -5,8 +5,15 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:viewmodels="clr-namespace:RadioThermLib.ViewModels;assembly=RadioThermLib"
         xmlns:fa="http://schemas.fontawesome.io/icons/"
+        xmlns:ie="http://schemas.microsoft.com/xaml/behaviors"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance viewmodels:ThermostatWidgetViewModel, IsDesignTimeCreatable=False}" >
+
+    <ie:Interaction.Triggers>
+        <ie:EventTrigger EventName="Loaded">
+            <ie:InvokeCommandAction Command="{Binding StartUpdateAllCommand }" />
+        </ie:EventTrigger>
+    </ie:Interaction.Triggers>
 
     <UserControl.Resources>
         <BitmapImage x:Key="coolImage" UriSource="..\icons8-snowflake-48.png" />

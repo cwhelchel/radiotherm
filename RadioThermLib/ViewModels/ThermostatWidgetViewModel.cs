@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.DependencyInjection;
+using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using RadioThermLib.Services;
 
@@ -21,6 +22,9 @@ namespace RadioThermLib.ViewModels
             this.settingsService = settingsService;
             this.viewService = viewService;
             Thermostats = new ObservableCollection<ThermostatViewModel>();
+
+            // we dont care about the message sent in here
+            StartUpdateAllCommand = new AsyncRelayCommand(async () => await HandleUpdateAllMsg(null));
         }
 
         #region Properties
@@ -37,8 +41,10 @@ namespace RadioThermLib.ViewModels
             set => SetProperty(ref isUpdating, value);
         }
 
+        public IAsyncRelayCommand StartUpdateAllCommand { get; }
+
         #endregion //Properties 
-        
+
         protected override void OnActivated()
         {
             RegisterMessages();
@@ -49,25 +55,33 @@ namespace RadioThermLib.ViewModels
             MessageHandler<ThermostatWidgetViewModel, UpdateRequestMessage> handler = async (r, m) =>
             {
                 // run the update and respond true.
-                try
-                {
-                    await UpdateAllDevices();
-                }
-                catch (Exception ex)
-                {
-                    string msg = RadioThermLib.strings.ErrUpdatingMsg;
-                    this.viewService.ShowDialog(RadioThermLib.strings.ErrUpdatingTitle, $"{msg}: {ex.Message}");
-                    this.IsUpdating = false;
-                }
+                await HandleUpdateAllMsg(m);
+            };
 
+            Messenger.Register(this, handler);
+        }
+
+        private async Task HandleUpdateAllMsg(UpdateRequestMessage? m)
+        {
+            try
+            {
+                await UpdateAllDevices();
+            }
+            catch (Exception ex)
+            {
+                string msg = RadioThermLib.strings.ErrUpdatingMsg;
+                this.viewService.ShowDialog(RadioThermLib.strings.ErrUpdatingTitle, $"{msg}: {ex.Message}");
+                this.IsUpdating = false;
+            }
+
+            if (m != null)
+            {
                 lock (respLock)
                 {
                     if (!m.HasReceivedResponse)
                         m.Reply(true);
                 }
-            };
-
-            Messenger.Register(this, handler);
+            }
         }
 
         private async Task UpdateAllDevices()
