@@ -6,13 +6,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using MaterialDesignThemes.Wpf;
 
 namespace RadioThermWpf.Views
 {
@@ -21,14 +21,25 @@ namespace RadioThermWpf.Views
     /// </summary>
     public partial class MainWindow : Window
     {
+        bool themeMode = false;
         public MainWindow()
         {
             InitializeComponent();
         }
 
-        private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private static void ModifyTheme(bool isDarkTheme)
         {
+            var paletteHelper = new PaletteHelper();
+            var theme = paletteHelper.GetTheme();
 
+            theme.SetBaseTheme(isDarkTheme ? Theme.Dark : Theme.Light);
+            paletteHelper.SetTheme(theme);
+        }
+
+        private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
+        {
+            themeMode = !themeMode;
+            ModifyTheme(themeMode);
         }
     }
 }

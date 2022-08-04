@@ -5,107 +5,99 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:local="clr-namespace:RadioThermWpf.Views"
+        mc:Ignorable="d"
         TextOptions.TextFormattingMode="Ideal" 
         TextOptions.TextRenderingMode="Auto"       
         TextElement.FontWeight="Regular"
         Background="{DynamicResource MaterialDesignLightBackground}"
         FontFamily="{DynamicResource MaterialDesignFont}"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-        mc:Ignorable="d"
         Title="Radio Thermostat" 
         Height="450" Width="800">
 
-    <Window.Resources>
-        <!--<Style TargetType="{x:Type Grid}">
-            <Setter Property="Background" Value="{StaticResource BackgroundBrush}" />
-        </Style>-->
-    </Window.Resources>
+    <materialDesign:Card>
 
-    <Grid>
-        <!--<Grid.ColumnDefinitions>
-            <ColumnDefinition Width=".5*"/>
-            <ColumnDefinition Width="1*"/>
-        </Grid.ColumnDefinitions>-->
+        <DockPanel>
+            <materialDesign:ColorZone Padding="16"  Mode="PrimaryDark" DockPanel.Dock="Top">
+                <DockPanel>
 
-        <TabControl materialDesign:ColorZoneAssist.Mode="Light" 
+                    <materialDesign:PopupBox
+                            DockPanel.Dock="Right"
+                            PlacementMode="BottomAndAlignRightEdges"
+                            StaysOpen="True">
+                        <StackPanel>
+                            <Grid Margin="10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                </Grid.RowDefinitions>
+                                <TextBlock
+                                        Text="Light"
+                                        Margin="0 0 10 0"/>
+                                <ToggleButton
+                                        x:Name="DarkModeToggleButton"
+                                        Click="ButtonBase_OnClick"
+                                        Grid.Column="1"/>
+                                <TextBlock
+                                        Text="Dark"
+                                        Margin="10 0 0 0"
+                                        Grid.Column="2"/>
+                            </Grid>
+
+                            <Button Content="Settings" />
+                            <Separator />
+                            <Button Content="Exit" />
+
+                        </StackPanel>
+                    </materialDesign:PopupBox>
+
+                    <TextBlock
+                        DockPanel.Dock="Left"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        FontSize="22"
+                        Margin="5,0,0,0"
+                        AutomationProperties.Name="Radio Thermostat"
+                        Text="Radio Thermostat"/>
+
+                </DockPanel>
+            </materialDesign:ColorZone>
+            <!--materialDesign:ColorZoneAssist.Mode="Light"-->
+            <!--Background="{DynamicResource MaterialDesignCardBackground}"-->
+            <TabControl 
                     TabStripPlacement="Left"
                     materialDesign:NavigationRailAssist.ShowSelectionBackground="True"
                     SnapsToDevicePixels="True">
-            <TabItem >
-                <TabItem.Header>
-                    <WrapPanel>
-                        <materialDesign:PackIcon Width="24" Height="24" HorizontalAlignment="Center" Kind="Magnify" />
-                        <TextBlock Text="DISCOVER" VerticalAlignment="Center"></TextBlock>
-                    </WrapPanel>
-                </TabItem.Header>
-                <!--<TextBlock Margin="8" Text="Default Tab 1" />-->
-                <local:DiscoveryWidget Margin="8" />
-            </TabItem>
-            <TabItem >
-                <TabItem.Header>
-                    <WrapPanel>
-                        <materialDesign:PackIcon Width="24" Height="24" HorizontalAlignment="Center" Kind="ClockOutline" />
-                        <TextBlock Text="THERMOSTATS" VerticalAlignment="Center"></TextBlock>
-                    </WrapPanel>
-                </TabItem.Header>
-                <!--<TextBlock Margin="8" Text="Default Tab 2" />-->
-                <local:ThermostatWidget Margin="8"/>
-            </TabItem>
-        </TabControl>
+                <TabItem>
+                    <TabItem.Header>
+                        <WrapPanel>
+                            <materialDesign:PackIcon Width="24" Height="24" HorizontalAlignment="Center" Kind="Magnify" />
+                            <TextBlock Text="DISCOVER" VerticalAlignment="Center"></TextBlock>
+                        </WrapPanel>
+                    </TabItem.Header>
 
-        <!--<TabControl 
-            materialDesign:NavigationRailAssist.ShowSelectionBackground="True"
-            SnapsToDevicePixels="True"
-            Style="{StaticResource MaterialDesignNavigationRailTabControl}"
-            TabStripPlacement="Left">
-
-            <TabItem Width="105">
-                <TabItem.Header>
-                    <StackPanel Width="auto" Height="auto">
-                        <materialDesign:PackIcon
-                                        Width="24"
-                                        Height="24"
-                                        HorizontalAlignment="Center"
-                                        Kind="Magnify" />
-                        <TextBlock HorizontalAlignment="Center" Text="Discover" />
-                    </StackPanel>
-                </TabItem.Header>
-
-                <StackPanel Margin="16">
-                    <TextBlock
-                                    Margin="0,0,0,8"
-                                    Style="{StaticResource MaterialDesignHeadline5TextBlock}"
-                                    Text="Discover Devices" />
                     <local:DiscoveryWidget />
-                </StackPanel>
-            </TabItem>
+                </TabItem>
 
-            <TabItem Width="105">
-                <TabItem.Header>
-                    <StackPanel Width="auto" Height="auto" >
-                        <materialDesign:PackIcon
-                                        Width="24"
-                                        Height="24"
-                                        HorizontalAlignment="Center"
-                                        Kind="ClockOutline" />
-                        <TextBlock HorizontalAlignment="Center" Text="Thermostats" />
-                    </StackPanel>
-                </TabItem.Header>
-                <StackPanel Margin="16">
-                    <TextBlock
-                                    Margin="0,0,0,8"
-                                    Style="{StaticResource MaterialDesignHeadline5TextBlock}"
-                                    Text="Thermostats" />
+                <TabItem>
+                    <TabItem.Header>
+                        <WrapPanel>
+                            <materialDesign:PackIcon Width="24" Height="24" HorizontalAlignment="Center" Kind="ClockOutline" />
+                            <TextBlock Text="THERMOSTATS" VerticalAlignment="Center"></TextBlock>
+                        </WrapPanel>
+                    </TabItem.Header>
 
                     <local:ThermostatWidget />
+                </TabItem>
 
-                </StackPanel>
-            </TabItem>
+            </TabControl>
+        </DockPanel>
 
-        </TabControl>-->
-
-        <!--<local:DiscoveryWidget Grid.Column="0" />
-        <local:ThermostatWidget Grid.Column="1" Margin="10" Background="{StaticResource BackgroundBrush}"/>-->
-
-    </Grid>
+    </materialDesign:Card>
 </Window>

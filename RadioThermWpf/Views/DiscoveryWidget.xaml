@@ -5,9 +5,15 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:s="clr-namespace:System;assembly=mscorlib"
              xmlns:local="clr-namespace:RadioThermWpf.Views"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:viewmodels="clr-namespace:RadioThermLib.ViewModels;assembly=RadioThermLib"
              xmlns:fa="http://schemas.fontawesome.io/icons/"
              xmlns:ie="http://schemas.microsoft.com/xaml/behaviors"
+             Background="{DynamicResource MaterialDesignLightBackground}"
+             TextOptions.TextFormattingMode="Ideal" 
+             TextOptions.TextRenderingMode="Auto"       
+             TextElement.FontWeight="Regular"
+             UseLayoutRounding="True"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance viewmodels:DiscoveryWidgetViewModel, IsDesignTimeCreatable=False}"
              d:DesignHeight="450" d:DesignWidth="800">
@@ -21,109 +27,111 @@
             </ie:InvokeCommandAction>
         </ie:EventTrigger>
     </ie:Interaction.Triggers>
-    <Grid>
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="5*"/>
-                <RowDefinition />
-            </Grid.RowDefinitions>
 
-            <TextBlock Style="{DynamicResource MaterialDesignBody1TextBlock}"
+    <materialDesign:Card>
+
+        <!-- these grids have to have this background for dark theme artifacts to disappear -->
+        <Grid Margin="8" Background="{DynamicResource MaterialDesignCardBackground}">
+            <Grid Background="{DynamicResource MaterialDesignCardBackground}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="5*"/>
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+
+                <TextBlock Style="{DynamicResource MaterialDesignHeadline5TextBlock}"
                        Text="Discovered Devices:" 
                        Grid.Column="0" 
                        Grid.Row="0"/>
 
-            <ListView 
-                Grid.Row="1"
-                Grid.Column="0"
-                Margin="1,0,0,0"
-                ItemsSource="{Binding Discovered}" 
-                SelectedItem="{Binding SelectedDevice, Mode=TwoWay}">
-                <ie:Interaction.Triggers>
-                    <ie:EventTrigger EventName="SelectionChanged">
-                        <ie:InvokeCommandAction Command="{Binding RequestUpdateCommand}" />
-                    </ie:EventTrigger>
-                </ie:Interaction.Triggers>
-            </ListView>
+                <ListView 
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    Margin="1,0,0,0"
+                    ItemsSource="{Binding Discovered}" 
+                    SelectedItem="{Binding SelectedDevice, Mode=TwoWay}">
+                    <ie:Interaction.Triggers>
+                        <ie:EventTrigger EventName="SelectionChanged">
+                            <ie:InvokeCommandAction Command="{Binding RequestUpdateCommand}" />
+                        </ie:EventTrigger>
+                    </ie:Interaction.Triggers>
+                </ListView>
 
-            <StackPanel Orientation="Horizontal" 
+                <StackPanel Orientation="Horizontal" 
                         Grid.Column="0"
                         Grid.Row="2">
 
-                <Button Content="Start Discovery" 
+                    <Button Content="Start Discovery" 
                         Command="{Binding StartDiscoveryCommand}"
-                        Style="{DynamicResource MaterialDesignRaisedLightButton}"
                         Margin="5">
-                    <Button.CommandParameter>
-                        <s:Boolean>True</s:Boolean>
-                    </Button.CommandParameter>
-                </Button>
+                        <Button.CommandParameter>
+                            <s:Boolean>True</s:Boolean>
+                        </Button.CommandParameter>
+                    </Button>
 
-                <ToggleButton x:Name="tglButton" Content="Manual Add" Style="{DynamicResource MaterialDesignRaisedLightButton}" Margin="5" />
+                    <ToggleButton x:Name="tglButton" Content="Manual Add"  Margin="5" Style="{DynamicResource MaterialDesignRaisedButton}" />
 
-                <Button Content="Manual Remove" 
+                    <Button Content="Manual Remove" 
                         Command="{Binding RemoveRemoteCommand}"
                         CommandParameter="{Binding SelectedDevice}"
-                        Style="{DynamicResource MaterialDesignRaisedLightButton}"
                         Margin="5"/>
 
-            </StackPanel>
-        </Grid>
-
-        <fa:ImageAwesome 
-            Height="25" 
-            Width="25" 
-            Grid.Row="1"
-            Grid.Column="0" 
-            SpinDuration="2"
-            Icon="Refresh" 
-            Spin="True" 
-            Visibility="{Binding Path=IsDiscovering, Converter={StaticResource BoolToVis}}" />
-
-        <Grid x:Name="Overlay" 
-              Panel.ZIndex="1000"
-              VerticalAlignment="Stretch"
-              HorizontalAlignment="Stretch"
-              Visibility="{Binding IsChecked, Converter={StaticResource BoolToVis}, ElementName=tglButton }"
-              Background="{DynamicResource MaterialDesignLightBackground}">
-            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                <!--<StackPanel.Resources>
-                    <Style x:Key="common"  TargetType="Control">
-                        <Setter Property="Margin" Value="10" />
-                    </Style>
-                    <Style TargetType="{x:Type Button}" BasedOn="{StaticResource common}">
-                        <Setter Property="MinWidth" Value="30" />
-                        <Setter Property="MinHeight" Value="30" />
-                        <Setter Property="Width" Value="50" />
-                    </Style>
-                    <Style TargetType="{x:Type Label}" BasedOn="{StaticResource common}" />
-                    <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource common}" />
-                </StackPanel.Resources>-->
-                <Label Content="Manually Add IP"/>
-                <TextBox x:Name="txtIpInput" Text="127.0.0.1" Margin="10"/>
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                    <Button Content="Add" 
-                            Margin="10"
-                            Command="{Binding AddRemoteCommand}" 
-                            CommandParameter="{Binding ElementName=txtIpInput, Path=Text}">
-                        <ie:Interaction.Triggers>
-                            <ie:EventTrigger EventName="Click">
-                                <ie:ChangePropertyAction TargetObject="{Binding ElementName=tglButton}" PropertyName="IsChecked" Value="False" />
-                            </ie:EventTrigger>
-                        </ie:Interaction.Triggers>
-                    </Button>
-                    <Button Content="Cancel"
-                            Margin="10">
-                        <ie:Interaction.Triggers>
-                            <ie:EventTrigger EventName="Click">
-                                <ie:ChangePropertyAction TargetObject="{Binding ElementName=tglButton}" PropertyName="IsChecked" Value="False" />
-                            </ie:EventTrigger>
-                        </ie:Interaction.Triggers>
-                    </Button>
                 </StackPanel>
-            </StackPanel>
-        </Grid>
+            </Grid>
 
-    </Grid>
+            <!--<fa:ImageAwesome 
+                Height="25" 
+                Width="25" 
+                Grid.Row="1"
+                Grid.Column="0" 
+                SpinDuration="2"
+                Icon="Refresh" 
+                Spin="True" 
+                Visibility="{Binding Path=IsDiscovering, Converter={StaticResource BoolToVis}}" />-->
+
+            <ProgressBar 
+                Grid.Row="1"
+                Grid.Column="0" 
+                Style="{StaticResource MaterialDesignCircularProgressBar}"
+                Value="0"
+                IsIndeterminate="True" 
+                Visibility="{Binding Path=IsDiscovering, Converter={StaticResource BoolToVis}}"/>
+
+            <Grid x:Name="Overlay" 
+                  Panel.ZIndex="1000"
+                  VerticalAlignment="Stretch"
+                  HorizontalAlignment="Stretch"
+                  Visibility="{Binding IsChecked, Converter={StaticResource BoolToVis}, ElementName=tglButton }"
+                  Background="{DynamicResource MaterialDesignCardBackground}">
+                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+
+                    <Label Content="Manually Add IP"/>
+                    <TextBox x:Name="txtIpInput" Text="127.0.0.1" Margin="10"/>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <Button Content="Add" 
+                                Margin="10"
+                                Command="{Binding AddRemoteCommand}" 
+                                CommandParameter="{Binding ElementName=txtIpInput, Path=Text}">
+                            <ie:Interaction.Triggers>
+                                <ie:EventTrigger EventName="Click">
+                                    <ie:ChangePropertyAction TargetObject="{Binding ElementName=tglButton}" PropertyName="IsChecked" Value="False" />
+                                </ie:EventTrigger>
+                            </ie:Interaction.Triggers>
+                        </Button>
+                        <Button Content="Cancel"
+                                Margin="10">
+                            <ie:Interaction.Triggers>
+                                <ie:EventTrigger EventName="Click">
+                                    <ie:ChangePropertyAction TargetObject="{Binding ElementName=tglButton}" PropertyName="IsChecked" Value="False" />
+                                </ie:EventTrigger>
+                            </ie:Interaction.Triggers>
+                        </Button>
+                    </StackPanel>
+                </StackPanel>
+            </Grid>
+
+        </Grid>
+    </materialDesign:Card>
+
+
 </UserControl>

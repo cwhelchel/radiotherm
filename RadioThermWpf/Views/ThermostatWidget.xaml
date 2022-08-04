@@ -6,6 +6,7 @@
         xmlns:viewmodels="clr-namespace:RadioThermLib.ViewModels;assembly=RadioThermLib"
         xmlns:fa="http://schemas.fontawesome.io/icons/"
         xmlns:ie="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance viewmodels:ThermostatWidgetViewModel, IsDesignTimeCreatable=False}" >
 
@@ -21,36 +22,40 @@
 
     </UserControl.Resources>
 
-    <Grid>
+    <materialDesign:Card>
 
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
+        <Grid Background="{DynamicResource MaterialDesignCardBackground}">
 
-        <ListView Grid.Row="0" ItemsSource="{Binding Thermostats}">
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <WrapPanel>
-                        <WrapPanel.Resources>
-                            <Style TargetType="{x:Type fa:ImageAwesome}">
-                                <Setter Property="Height" Value="25" />
-                                <Setter Property="Width" Value="25" />
-                            </Style>
-                        </WrapPanel.Resources>
-                        <Label Content="{Binding UnitName}" VerticalAlignment="Center"
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <ListView Grid.Row="0" ItemsSource="{Binding Thermostats}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <WrapPanel>
+                            <WrapPanel.Resources>
+                                <Style TargetType="{x:Type fa:ImageAwesome}">
+                                    <Setter Property="Height" Value="25" />
+                                    <Setter Property="Width" Value="25" />
+                                </Style>
+                            </WrapPanel.Resources>
+                            <Label Content="{Binding UnitName}" VerticalAlignment="Center"
                                Style="{StaticResource labelTitle}" />
-                        <Label Content="{Binding Version}" MinWidth="100" VerticalAlignment="Center"
+                            <Label Content="{Binding Version}" MinWidth="100" VerticalAlignment="Center"
                                Style="{StaticResource labelSubtitle}" />
-                        <Label Content="{Binding CurrentSetPoint}" MinWidth="100" VerticalAlignment="Center"
+                            <Label Content="{Binding CurrentSetPoint}" MinWidth="100" VerticalAlignment="Center"
                                Style="{StaticResource labelText}" />
-                        <Button Content="Click" Command="{Binding ShowDetailsCommand}"></Button>
-                        <fa:ImageAwesome Icon="Refresh" Spin="True"
+                            <Button Content="Click" Command="{Binding ShowDetailsCommand}"></Button>
+                            <fa:ImageAwesome Icon="Refresh" Spin="True"
                                          Visibility="{Binding Path=IsUpdating, Converter={StaticResource BoolToVis}}" />
-                        <fa:ImageAwesome Icon="Exclamation" Foreground="Red"
+                            <fa:ImageAwesome Icon="Exclamation" Foreground="Red"
                                          Visibility="{Binding Path=HasError, Converter={StaticResource BoolToVis}}" />
-                    </WrapPanel>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
-  </Grid>
+                        </WrapPanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </Grid>
+
+    </materialDesign:Card>
 </UserControl>

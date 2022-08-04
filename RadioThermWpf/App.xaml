@@ -21,18 +21,25 @@
 
 
             <BooleanToVisibilityConverter x:Key="BoolToVis" />
-            <!--<SolidColorBrush x:Key="BackgroundBrush" Color="{Binding Color, Source={StaticResource MaterialDesignBackground}}" />-->
             <valcvtr:ThermostatModeToImageValueConverter x:Key="ModeToImage" />
             <valcvtr:ThermostatModeToTextValueConverter x:Key="ModeToText" />
 
             <!--
             Label styles
-        -->
+            -->
             <Style x:Key="labelColor" TargetType="{x:Type Label}">
-                <Setter Property="Foreground" Value="DodgerBlue"/>
+                <Setter Property="Foreground" Value="#1976D2"/>
                 <Style.Triggers>
                     <DataTrigger Binding="{Binding State.CurrentState}" Value="Heat">
-                        <Setter Property="Foreground" Value="Red" />
+                        <Setter Property="Foreground" Value="#ba000d" />
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+            <Style x:Key="textblockColor" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource MaterialDesignTextBlock}">
+                <Setter Property="Foreground" Value="#1976D2"/>
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding State.CurrentState}" Value="Heat">
+                        <Setter Property="Foreground" Value="#ba000d" />
                     </DataTrigger>
                 </Style.Triggers>
             </Style>
@@ -48,6 +55,16 @@
             <Style x:Key="labelText" BasedOn="{StaticResource labelColor}" TargetType="{x:Type Label}">
                 <Setter Property="FontSize" Value="12"/>
                 <Setter Property="FontWeight" Value="Light" />
+            </Style>
+
+            <Style x:Key="labelTemperature" TargetType="{x:Type Label}" >
+                <Setter Property="Foreground" Value="#1976D2"/>
+                <Setter Property="FontSize" Value="24" ></Setter>
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding State.CurrentState}" Value="Heat">
+                        <Setter Property="Foreground" Value="#ba000d" />
+                    </DataTrigger>
+                </Style.Triggers>
             </Style>
 
         </ResourceDictionary>
