@@ -51,10 +51,4 @@ namespace RadioThermWebApp.Services
             appSettings?.WriteTo(utfWriter, new JsonSerializerOptions { WriteIndented = true });
         }
     }
-
-    public sealed record AppSettings(
-        [property: JsonPropertyName("ThermostatUrl")] string ThermostatUrl,
-        [property: JsonPropertyName("DiscoveryTimeout")] int DiscoveryTimeout,
-        [property: JsonPropertyName("ManualAddresses")] List<string> ManualAddresses
-    );
 }

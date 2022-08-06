@@ -18,7 +18,7 @@ builder.Services.AddSingleton<ISettingsService, JsonSettingService>();
 builder.Services.AddSingleton<IViewService, ViewService>();
 builder.Services.AddSingleton<IThermostatService, ThermostatService>();
 builder.Services.AddTransient<ThermostatViewModel>();
-builder.Services.AddTransient<ThermostatWidgetViewModel>();
+builder.Services.AddSingleton<ThermostatWidgetViewModel>();
 builder.Services.AddTransient<DiscoveryWidgetViewModel>();
 
 var app = builder.Build();

@@ -1,0 +1,111 @@
+﻿@page "/details/{index}"
+
+@using RadioThermLib.ViewModels
+@using RadioThermLib.Models
+
+@inject ThermostatWidgetViewModel WidgetViewModel
+
+<h3>Details</h3>
+
+@if (!isLoaded)
+{
+    <h4>Error loading, device not found.</h4>
+}
+else
+{
+    <h4>Thermostat: @tsViewModel.ThermostatIp</h4>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-sm">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">Current Temp</h5>
+                        <p class="card-body">@thermostatState.Temperature</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">Current Set Point:</h5>
+                        <span class="card-body">@tsViewModel.CurrentSetPoint</span>
+                        <div class="btn-group-vertical">
+                            <button class="btn btn-secondary" @onclick="Increment"><span class="oi oi-arrow-thick-top"></span></button>
+                            <button class="btn btn-secondary" @onclick="Decrement"><span class="oi oi-arrow-thick-bottom"></span></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Current Mode</h5>
+                        <p class="card-body">@thermostatState.ThermostatMode</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+@code {
+
+    private ThermostatState thermostatState;
+    private ThermostatViewModel tsViewModel;
+    private bool isLoaded = false;
+    private bool isSettingTemp = false;
+    private CancellationTokenSource source; // dispose
+
+    [Parameter]
+    public string Index { get; set; }
+
+    protected override void OnInitialized()
+    {
+        int tsidx = int.Parse(Index);
+
+        if (tsidx < WidgetViewModel.Thermostats.Count)
+        {
+            var v = WidgetViewModel.Thermostats[tsidx];
+            tsViewModel = v;
+            thermostatState = v.State;
+            isLoaded = true;
+        }
+
+        source = new CancellationTokenSource();
+    }
+
+    private async Task Increment()
+    {
+        if (isSettingTemp)
+            source.Cancel();
+
+        tsViewModel.CurrentSetPoint++;
+        await SetTemp();
+    }
+
+    private async Task Decrement()
+    {
+        if (isSettingTemp)
+            source.Cancel();
+
+        tsViewModel.CurrentSetPoint--;
+        await SetTemp();
+    }
+
+    private async Task SetTemp()
+    {
+        isSettingTemp = true;
+
+        // wait 2 seconds then call set temp async
+        await Task.Run(async () =>
+        {
+            await Task.Delay(2000);
+            await tsViewModel.SetTemperatureAsync(tsViewModel.CurrentSetPoint.ToString());
+        },
+            source.Token);
+
+        isSettingTemp = false;
+    }
+}

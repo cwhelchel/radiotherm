@@ -4,11 +4,13 @@
 @using RadioThermLib.ViewModels
 @using RadioThermLib.Services
 
+
 @inject ThermostatWidgetViewModel thermostatViewModel
 @inject ISettingsService settingsService
+@inject NavigationManager navigationManager
+
 
 <h3>Thermostat</h3>
-
 
 @if (HasError)
 {
@@ -21,16 +23,19 @@
 }
 else
 {
-    <table class="table">
-        <thead>
+    <div class="table-responsive-xl">
+
+        <table class="table table-striped">
+            <thead>
             <tr>
-                <th>Unit Name</th>
-                <th>Temp</th>
-                <th>Set Point</th>
-                <th>Mode</th>
+                <th scope="col" class="col-5" >Unit Name</th>
+                <th scope="col" class="col-1">Temp</th>
+                <th scope="col" class="col-1">Set Point</th>
+                <th scope="col" class="col-1">Mode</th>
+                <th scope="col" class="col-4">Control</th>
             </tr>
-        </thead>
-        <tbody>
+            </thead>
+            <tbody>
             @foreach (var ts in thermostatViewModel.Thermostats)
             {
                 @if (ts.HasError)
@@ -44,62 +49,55 @@ else
                         <td>@ts.State?.Temperature</td>
                         <td>@ts.CurrentSetPoint</td>
                         <td>@ts.State?.ThermostatMode</td>
+                        <td><button class="btn btn-secondary" @onclick="@(e => OnClickCallback(ts))">Control</button></td>
                     </tr>
                 }
             }
-        </tbody>
-    </table>
+            </tbody>
+        </table>
+    </div>
 
     <button class="btn btn-primary" @onclick="@OnRefreshDevices">Refresh Devices</button>
-    <button class="btn btn-primary" @onclick="@ShowPopup"></button>
 
 }
 
 @code {
-    private Popup popupRef;
 
     [CascadingParameter]
     protected bool HasError { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        thermostatViewModel.PropertyChanged += (sender, args) =>
-        {
-            // the VM uses messaging to start its update. we need to tie in
-            // somehow to update the DOM
-            StateHasChanged();
-        };
-
         HasError = false;
 
         // normally done in WPF land when a control is FrameworkElement.Loaded
         // we set this so that the VM registers for its messages properly.
         thermostatViewModel.IsActive = true;
+        // NOTE: we may not need this anymore
 
-        SendUpdateRequestMsg();
+        await SendUpdateRequestMsg();
     }
 
     private async Task OnRefreshDevices()
     {
-        SendUpdateRequestMsg();
+        await SendUpdateRequestMsg();
     }
 
-    private void SendUpdateRequestMsg()
+    private async Task SendUpdateRequestMsg()
     {
         var settings = this.settingsService;
 
-        var devices = settings!.GetValue<List<string>>("DiscoveredAddresses");
-
-        foreach (var device in devices!)
-        {
-            var urm = new UpdateRequestMessage() { SelectedDevice = device };
-            var res = WeakReferenceMessenger.Default.Send(urm);
-        }
+        await thermostatViewModel.StartUpdateAllCommand.ExecuteAsync(null);
     }
 
-    private void ShowPopup()
+    private void OnClickCallback(ThermostatViewModel? obj)
     {
-        popupRef.Show();
-    }
+        if (obj == null)
+            return;
 
+        int id = thermostatViewModel.Thermostats.IndexOf(obj);
+        navigationManager.NavigateTo($"/details/{id}");
+
+    }
 }
+

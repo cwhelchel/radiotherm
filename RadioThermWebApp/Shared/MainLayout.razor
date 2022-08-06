@@ -45,8 +45,10 @@
     {
         if (e == null) return;
 
-        vsPopup.Show(e.Title, e.Message);
+        InvokeAsync(() => vsPopup.Show(e.Title, e.Message));
+        
         HasError = true;
-        StateHasChanged();
+
+        InvokeAsync(StateHasChanged);
     }
 }
