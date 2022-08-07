@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using Microsoft.Extensions.Logging;
 using RadioThermLib.Services;
 
 namespace RadioThermLib.ViewModels
@@ -15,12 +16,13 @@ namespace RadioThermLib.ViewModels
         private ObservableCollection<ThermostatViewModel> thermostatVms = null!;
         private bool isUpdating;
         private object respLock = new object();
+        private readonly ILogger<ThermostatWidgetViewModel> log;
 
-
-        public ThermostatWidgetViewModel(ISettingsService settingsService, IViewService viewService)
+        public ThermostatWidgetViewModel(ISettingsService settingsService, IViewService viewService, ILogger<ThermostatWidgetViewModel> log)
         {
             this.settingsService = settingsService;
             this.viewService = viewService;
+            this.log = log;
             Thermostats = new ObservableCollection<ThermostatViewModel>();
 
             // we dont care about the message sent in here
@@ -58,6 +60,7 @@ namespace RadioThermLib.ViewModels
                 await HandleUpdateAllMsg(m);
             };
 
+            this.log.LogDebug("registered for UpdateRequestMessage");
             Messenger.Register(this, handler);
         }
 
@@ -69,7 +72,9 @@ namespace RadioThermLib.ViewModels
             }
             catch (Exception ex)
             {
+
                 string msg = RadioThermLib.strings.ErrUpdatingMsg;
+                this.log.LogError(ex, msg);
                 this.viewService.ShowDialog(RadioThermLib.strings.ErrUpdatingTitle, $"{msg}: {ex.Message}");
                 this.IsUpdating = false;
             }
@@ -86,6 +91,8 @@ namespace RadioThermLib.ViewModels
 
         private async Task UpdateAllDevices()
         {
+            this.log.LogInformation("refreshing all devices");
+
             this.IsUpdating = true;
 
             Thermostats.Clear();

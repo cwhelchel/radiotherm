@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.Extensions.Logging;
 using RadioThermLib.Models;
 using RadioThermLib.Services;
 
@@ -14,9 +15,9 @@ namespace RadioThermLib.ViewModels
 {
     public class ThermostatViewModel : ObservableRecipient
     {
-        private readonly ISettingsService settingsService;
         private readonly IThermostatService thermostatService;
         private readonly IViewService viewService;
+        private readonly ILogger<ThermostatViewModel> log;
         private string? unitName;
         private float currentSetPoint;
         private bool isUpdating;
@@ -26,11 +27,11 @@ namespace RadioThermLib.ViewModels
         private string? thermostatUrl;
         private bool hasError;
 
-        public ThermostatViewModel(ISettingsService settingsService, IThermostatService thermostatService, IViewService viewService)
+        public ThermostatViewModel(IThermostatService thermostatService, IViewService viewService, ILogger<ThermostatViewModel> log)
         {
-            this.settingsService = settingsService;
             this.thermostatService = thermostatService;
             this.viewService = viewService;
+            this.log = log;
 
             UpdateCommand = new AsyncRelayCommand<string>(UpdateAsync!);
             SetTemperatureCommand = new AsyncRelayCommand<string>(SetTemperatureAsync);
@@ -96,6 +97,8 @@ namespace RadioThermLib.ViewModels
             this.ThermostatIp = selectedDeviceIp;
             this.thermostatUrl = "http://" + selectedDeviceIp;
 
+            this.log.LogInformation($"fetching data from {thermostatUrl}");
+
             IsUpdating = true;
 
             try
@@ -108,7 +111,7 @@ namespace RadioThermLib.ViewModels
             {
                 this.HasError = true;
                 ShowError(ex);
-                Console.WriteLine(ex);
+                this.log.LogError(ex, "Error fetching data");
             }
 
             IsUpdating = false;
@@ -149,7 +152,6 @@ namespace RadioThermLib.ViewModels
         public void ShowDetails()
         {
             this.viewService.ShowThermostatDetails(this);
-
         }
 
         private async Task<bool> FetchData()
@@ -185,6 +187,8 @@ namespace RadioThermLib.ViewModels
         {
             var error = thermostatService.GetError();
             Debug.Assert(error != null, nameof(error) + " != null");
+
+            this.log.LogError(error.ExceptionObj, $"service error: {error.ErrorMessage}");
             ShowError(error.ExceptionObj);
         }
 

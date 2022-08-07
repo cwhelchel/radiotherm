@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using RadioThermLibTests.Mocks;
 
 namespace RadioThermLibTests
@@ -25,6 +26,7 @@ namespace RadioThermLibTests
                  .AddTransient<ThermostatWidgetViewModel>()
                  .AddTransient<DiscoveryWidgetViewModel>()
                  .AddTransient<ThermostatViewModel>()
+                 .AddLogging(b => b.AddDebug())
                  .BuildServiceProvider());
         }
     }

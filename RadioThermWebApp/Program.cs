@@ -20,6 +20,8 @@ builder.Services.AddSingleton<IThermostatService, ThermostatService>();
 builder.Services.AddTransient<ThermostatViewModel>();
 builder.Services.AddSingleton<ThermostatWidgetViewModel>();
 builder.Services.AddTransient<DiscoveryWidgetViewModel>();
+builder.Logging.AddDebug();
+builder.Logging.AddSimpleConsole(config => config.TimestampFormat= "yyyy-MM-ddTHH:mm:sszz -> ");
 
 var app = builder.Build();
 

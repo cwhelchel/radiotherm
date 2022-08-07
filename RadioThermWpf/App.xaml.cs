@@ -7,6 +7,7 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using Microsoft.Extensions.Logging;
 using RadioThermLib.Services;
 using RadioThermWpf.Services;
 using RadioThermLib.ViewModels;
@@ -23,6 +24,8 @@ namespace RadioThermWpf
         {
             base.OnStartup(e);
 
+            //using ILoggerFactory lf = LoggerFactory.Create(b => b.AddSimpleConsole());
+
             var services = new ServiceCollection()
                 //.AddSingleton<ISettingsService, SettingsService>()
                 .AddSingleton<ISettingsService, JsonSettingService>()
@@ -31,6 +34,7 @@ namespace RadioThermWpf
                 .AddTransient<ThermostatWidgetViewModel>()
                 .AddTransient<ThermostatViewModel>()
                 .AddTransient<DiscoveryWidgetViewModel>()
+                .AddLogging(b => b.AddSimpleConsole().AddDebug())
                 .BuildServiceProvider();
 
             Ioc.Default.ConfigureServices(services);
