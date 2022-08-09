@@ -35,22 +35,23 @@ public sealed record ThermostatState(
     [property: JsonPropertyName("temp")] float Temperature,
     [property: JsonPropertyName("tmode")] ThermostatModeEnum ThermostatMode,
     [property: JsonPropertyName("fmode")] FanModeEnum FanMode,
-    [property: JsonPropertyName("override")] int IsOverride,
+    [property: JsonPropertyName("override")]
+    int IsOverride,
     [property: JsonPropertyName("hold")] int IsHold,
     [property: JsonPropertyName("t_cool")] float TemporaryCoolSetPoint,
     [property: JsonPropertyName("t_heat")] float TemporaryHeatSetPoint,
     [property: JsonPropertyName("a_cool")] float AbsoluteCoolSetPoint,
     [property: JsonPropertyName("a_heat")] float AbsoluteHeatSetPoint,
-    [property: JsonPropertyName("it_cool")] float TemporaryCoolSetPointNoMode,
-    [property: JsonPropertyName("it_heat")] float TemporaryHeatSetPointNoMode,
+    [property: JsonPropertyName("it_cool")]
+    float TemporaryCoolSetPointNoMode,
+    [property: JsonPropertyName("it_heat")]
+    float TemporaryHeatSetPointNoMode,
     [property: JsonPropertyName("tstate")] ThermostatStateEnum CurrentState,
     [property: JsonPropertyName("fstate")] FanStateEnum FanState,
     [property: JsonPropertyName("time")] TimeObj ThermostatTime,
-    [property: JsonPropertyName("t_type_post")] int TargetTempPost
-    )
-{
-    private const string ObsoleteMsg = "";
-}
+    [property: JsonPropertyName("t_type_post")]
+    int TargetTempPost
+);
 
 public static class Default
 {

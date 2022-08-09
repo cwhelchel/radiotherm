@@ -61,6 +61,15 @@ namespace RadioThermLib {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to valid range for day argument is 0-6.
+        /// </summary>
+        internal static string DayValidRangeMsg {
+            get {
+                return ResourceManager.GetString("DayValidRangeMsg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error Updating Devices.
         /// </summary>
         internal static string ErrUpdatingMsg {
@@ -75,6 +84,15 @@ namespace RadioThermLib {
         internal static string ErrUpdatingTitle {
             get {
                 return ResourceManager.GetString("ErrUpdatingTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid number of elements in data. Must be a multiple of 2.
+        /// </summary>
+        internal static string InvalidCountMsg {
+            get {
+                return ResourceManager.GetString("InvalidCountMsg", resourceCulture);
             }
         }
         

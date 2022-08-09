@@ -106,4 +106,10 @@
   <data name="ErrUpdatingMsg" xml:space="preserve">
     <value>Error Updating Devices</value>
   </data>
+  <data name="InvalidCountMsg" xml:space="preserve">
+    <value>Invalid number of elements in data. Must be a multiple of 2</value>
+  </data>
+  <data name="DayValidRangeMsg" xml:space="preserve">
+	  <value>valid range for day argument is 0-6</value>
+  </data>
 </root>

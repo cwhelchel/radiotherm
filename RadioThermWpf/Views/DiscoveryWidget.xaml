@@ -7,7 +7,6 @@
              xmlns:local="clr-namespace:RadioThermWpf.Views"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:viewmodels="clr-namespace:RadioThermLib.ViewModels;assembly=RadioThermLib"
-             xmlns:fa="http://schemas.fontawesome.io/icons/"
              xmlns:ie="http://schemas.microsoft.com/xaml/behaviors"
              Background="{DynamicResource MaterialDesignLightBackground}"
              TextOptions.TextFormattingMode="Ideal" 
@@ -79,25 +78,14 @@
                 </StackPanel>
             </Grid>
 
-            <!--<fa:ImageAwesome 
-                Height="25" 
-                Width="25" 
-                Grid.Row="1"
-                Grid.Column="0" 
-                SpinDuration="2"
-                Icon="Refresh" 
-                Spin="True" 
-                Visibility="{Binding Path=IsDiscovering, Converter={StaticResource BoolToVis}}" />-->
-
             <ProgressBar 
-                Grid.Row="1"
                 Grid.Column="0" 
                 Style="{StaticResource MaterialDesignCircularProgressBar}"
                 Value="0"
                 IsIndeterminate="True" 
                 Visibility="{Binding Path=IsDiscovering, Converter={StaticResource BoolToVis}}"/>
 
-            <Grid x:Name="Overlay" 
+            <Grid x:Name="overlay" 
                   Panel.ZIndex="1000"
                   VerticalAlignment="Stretch"
                   HorizontalAlignment="Stretch"

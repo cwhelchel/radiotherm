@@ -15,6 +15,8 @@ namespace RadioThermLib.Services
 
         Task<string> GetUnitNameAsync(string url);
 
+        Task<ThermostatProgram?> GetCoolProgram(string url);
+
         Task SetCoolAsync(string url, float temp);
 
         Task SetHeatAsync(string url, float temp);

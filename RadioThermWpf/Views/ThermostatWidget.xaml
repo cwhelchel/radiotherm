@@ -16,12 +16,6 @@
         </ie:EventTrigger>
     </ie:Interaction.Triggers>
 
-    <UserControl.Resources>
-        <BitmapImage x:Key="coolImage" UriSource="..\icons8-snowflake-48.png" />
-        <BitmapImage x:Key="heatImage" UriSource="..\icons8-fire-48.png" />
-
-    </UserControl.Resources>
-
     <materialDesign:Card>
 
         <Grid Background="{DynamicResource MaterialDesignCardBackground}">

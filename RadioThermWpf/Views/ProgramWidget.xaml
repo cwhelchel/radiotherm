@@ -1,0 +1,44 @@
+﻿<UserControl x:Class="RadioThermWpf.Views.ProgramWidget"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:RadioThermWpf.Views"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:viewModels="clr-namespace:RadioThermLib.ViewModels;assembly=RadioThermLib"
+             xmlns:ie="http://schemas.microsoft.com/xaml/behaviors"
+             Background="{DynamicResource MaterialDesignLightBackground}"
+             TextOptions.TextFormattingMode="Ideal" 
+             TextOptions.TextRenderingMode="Auto"       
+             TextElement.FontWeight="Regular"
+             UseLayoutRounding="True"
+             mc:Ignorable="d" 
+             Width="Auto"
+             Height="Auto"
+             d:DataContext="{d:DesignInstance viewModels:ProgramViewModel, IsDesignTimeCreatable=False}"
+             d:DesignHeight="450" d:DesignWidth="450">
+
+    <materialDesign:Card>
+        <ListView ItemsSource="{Binding DayPrograms}">
+            <ListView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Horizontal" CanHorizontallyScroll="True"></StackPanel>
+                </ItemsPanelTemplate>
+            </ListView.ItemsPanel>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel>
+                        <TextBlock Text="{Binding Day}" VerticalAlignment="Center" />
+                        <ListView ItemsSource="{Binding ProgramData}">
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <local:TimeProgramWidget />
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </StackPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </materialDesign:Card>
+</UserControl>

@@ -22,6 +22,7 @@ namespace RadioThermLib.ViewModels
         private float currentSetPoint;
         private bool isUpdating;
         private ThermostatState? state;
+        private ProgramViewModel? program;
         private string? version;
         private string? thermostatIp;
         private string? thermostatUrl;
@@ -36,6 +37,7 @@ namespace RadioThermLib.ViewModels
             UpdateCommand = new AsyncRelayCommand<string>(UpdateAsync!);
             SetTemperatureCommand = new AsyncRelayCommand<string>(SetTemperatureAsync);
             ShowDetailsCommand = new RelayCommand(ShowDetails);
+            GetProgramCommand = new AsyncRelayCommand(GetProgramAsync);
         }
 
         public IRelayCommand<string> SetTemperatureCommand { get; set; }
@@ -44,11 +46,18 @@ namespace RadioThermLib.ViewModels
 
         public IRelayCommand ShowDetailsCommand { get; set; }
 
+        public IRelayCommand GetProgramCommand { get; set; }
 
         public ThermostatState? State
         {
             get => state;
             set => SetProperty(ref state, value);
+        }
+
+        public ProgramViewModel? Program
+        {
+            get => program;
+            set => SetProperty(ref program, value);
         }
 
         public bool IsUpdating
@@ -152,6 +161,29 @@ namespace RadioThermLib.ViewModels
         public void ShowDetails()
         {
             this.viewService.ShowThermostatDetails(this);
+        }
+
+        public async Task GetProgramAsync()
+        {
+            if (this.thermostatUrl == null || State == null)
+                return;
+
+            IsUpdating = true;
+
+            if (State.ThermostatMode == ThermostatModeEnum.Cool)
+            {
+                var tsp = await thermostatService.GetCoolProgram(this.thermostatUrl);
+                if (tsp != null) 
+                    Program = new ProgramViewModel(tsp);
+                else
+                    log.LogWarning("GetCoolProgram returned null instead of data");
+            }
+            else if (State.ThermostatMode == ThermostatModeEnum.Heat)
+            {
+                //await thermostatService.SetHeatAsync(this.thermostatUrl);
+            }
+
+            IsUpdating = false;
         }
 
         private async Task<bool> FetchData()
