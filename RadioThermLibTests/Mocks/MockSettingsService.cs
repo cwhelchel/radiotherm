@@ -7,6 +7,10 @@ namespace RadioThermLibTests.Mocks
     {
         bool setup = false;
         Dictionary<string, object> values = new Dictionary<string, object>();
+        
+        // if wanting to straight unit test the ThermostatService, without mocking the IThermostatService
+        // return this in GetHttpMessageHandler. 
+        // If doing some testing w/ a real thermostat, don't return this. Instead return new HttpClientHandler()
         MockHttpMessageHandler mockHttpMessageHandler = new MockHttpMessageHandler();
 
         public HttpMessageHandler GetHttpMessageHandler() => mockHttpMessageHandler;

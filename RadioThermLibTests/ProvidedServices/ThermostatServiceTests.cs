@@ -1,5 +1,6 @@
 ﻿using RadioThermLib.ProvidedServices;
 using CommunityToolkit.Mvvm.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RadioThermLib.Services;
 using RadioThermLibTests.Mocks;
@@ -15,8 +16,9 @@ namespace RadioThermLib.ProvidedServices.Tests
         public async Task GetStatusAsyncTest()
         {
             var settings = Ioc.Default.GetRequiredService<ISettingsService>();
-            var uut = new ThermostatService(settings);
-            
+            var logger = Ioc.Default.GetRequiredService<ILogger<ThermostatService>>();
+            var uut = new ThermostatService(settings, logger);
+
             var status = await uut!.GetStatusAsync(TestUrl);
 
             Assert.IsNotNull(status);
@@ -29,7 +31,8 @@ namespace RadioThermLib.ProvidedServices.Tests
         public async Task GetVersionAsyncTest()
         {
             var settings = Ioc.Default.GetRequiredService<ISettingsService>();
-            var uut = new ThermostatService(settings);
+            var logger = Ioc.Default.GetRequiredService<ILogger<ThermostatService>>();
+            var uut = new ThermostatService(settings, logger);
 
             var version = await uut!.GetVersionAsync(TestUrl);
 
@@ -46,7 +49,8 @@ namespace RadioThermLib.ProvidedServices.Tests
         public async Task SetCoolAsyncTest()
         {
             var settings = Ioc.Default.GetRequiredService<ISettingsService>();
-            var uut = new ThermostatService(settings);
+            var logger = Ioc.Default.GetRequiredService<ILogger<ThermostatService>>();
+            var uut = new ThermostatService(settings, logger);
 
             await uut!.SetCoolAsync(TestUrl, 72.0f);
 
@@ -60,7 +64,8 @@ namespace RadioThermLib.ProvidedServices.Tests
         public async Task SetHeatAsyncTest()
         {
             var settings = Ioc.Default.GetRequiredService<ISettingsService>();
-            var uut = new ThermostatService(settings);
+            var logger = Ioc.Default.GetRequiredService<ILogger<ThermostatService>>();
+            var uut = new ThermostatService(settings, logger);
 
             await uut!.SetHeatAsync(TestUrl, 72.0f);
 
@@ -76,8 +81,9 @@ namespace RadioThermLib.ProvidedServices.Tests
             var settings = Ioc.Default.GetRequiredService<ISettingsService>();
             var http = settings.GetHttpMessageHandler() as MockHttpMessageHandler;
             http!.ThrowError = true;
-            
-            var uut = new ThermostatService(settings);
+
+            var logger = Ioc.Default.GetRequiredService<ILogger<ThermostatService>>();
+            var uut = new ThermostatService(settings, logger);
 
             Assert.ThrowsExceptionAsync<MockException>(() => uut.GetStatusAsync(TestUrl));
 
@@ -88,6 +94,19 @@ namespace RadioThermLib.ProvidedServices.Tests
             Assert.IsFalse(string.IsNullOrWhiteSpace(error.ErrorMessage));
 
             http!.ThrowError = false;
+        }
+
+        [TestMethod()]
+        public async Task GetCoolProgramTest()
+        {
+            var settings = Ioc.Default.GetRequiredService<ISettingsService>();
+            var logger = Ioc.Default.GetRequiredService<ILogger<ThermostatService>>();
+            var uut = new ThermostatService(settings, logger);
+
+            //uut.GetCoolProgram(TestUrl);
+
+            await uut.GetCoolProgram("http://192.168.11.156");
+
         }
     }
 }
