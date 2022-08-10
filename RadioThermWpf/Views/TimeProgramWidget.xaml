@@ -4,8 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:RadioThermWpf.Views"
+             xmlns:vms="clr-namespace:RadioThermLib.ViewModels;assembly=RadioThermLib"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-             xmlns:models="clr-namespace:RadioThermLib.Models;assembly=RadioThermLib"
              xmlns:ie="http://schemas.microsoft.com/xaml/behaviors"
              Background="{DynamicResource MaterialDesignLightBackground}"
              TextOptions.TextFormattingMode="Ideal" 
@@ -15,7 +15,7 @@
              mc:Ignorable="d" 
              Width="Auto"
              Height="Auto"
-             d:DataContext="{d:DesignInstance models:TimeProgram, IsDesignTimeCreatable=False}"
+             d:DataContext="{d:DesignInstance vms:TimeProgramViewModel, IsDesignTimeCreatable=False}"
              d:DesignHeight="450" d:DesignWidth="450">
 
     <materialDesign:Card>
@@ -29,13 +29,13 @@
 
             <StackPanel Grid.Row="0" Margin="8" HorizontalAlignment="Left" Orientation="Horizontal">
                 <TextBlock Text="Time:" Margin="5,0,20,0" />
-                <TextBlock Text="{Binding Time,Mode=OneWay}"></TextBlock>
+                <TextBlock Text="{Binding StartTime}"></TextBlock>
             </StackPanel>
 
 
             <StackPanel Grid.Row="1" Margin="8" HorizontalAlignment="Left" Orientation="Horizontal">
                 <TextBlock Text="Temperature" Margin="5,0,20,0" />
-                <TextBlock Text="{Binding ProgrammedTemp, Mode=OneWay}" />
+                <Label Content="{Binding ProgrammedTemp}" ContentStringFormat="{}{0}°"/>
             </StackPanel>
         </Grid>
     </materialDesign:Card>

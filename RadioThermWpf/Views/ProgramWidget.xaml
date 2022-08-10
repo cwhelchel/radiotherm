@@ -28,8 +28,8 @@
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <StackPanel>
-                        <TextBlock Text="{Binding Day}" VerticalAlignment="Center" />
-                        <ListView ItemsSource="{Binding ProgramData}">
+                        <TextBlock Text="{Binding DayOfWeek}" VerticalAlignment="Center" />
+                        <ListView ItemsSource="{Binding Data}">
                             <ListView.ItemTemplate>
                                 <DataTemplate>
                                     <local:TimeProgramWidget />
