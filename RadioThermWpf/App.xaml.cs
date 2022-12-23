@@ -7,7 +7,10 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Console;
+using Microsoft.Extensions.Logging.Debug;
 using RadioThermLib.Services;
 using RadioThermWpf.Services;
 using RadioThermLib.ViewModels;
@@ -34,9 +37,9 @@ namespace RadioThermWpf
                 .AddTransient<ThermostatWidgetViewModel>()
                 .AddTransient<ThermostatViewModel>()
                 .AddTransient<DiscoveryWidgetViewModel>()
-                .AddLogging(b => b.AddSimpleConsole().AddDebug())
+                .AddLogging(b => b.AddSimpleConsole().AddDebug().AddFilter("RadioThermLib", LogLevel.Debug))
                 .BuildServiceProvider();
-
+            
             Ioc.Default.ConfigureServices(services);
         }
     }

@@ -40,6 +40,11 @@ namespace RadioThermLibTests.Mocks
             throw new NotImplementedException();
         }
 
+        public Task SetCoolProgram(string url, ThermostatProgram program)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task SetCoolAsync(string url, float temp)
         {
             state = state with { TemporaryCoolSetPoint = temp, CurrentState = ThermostatStateEnum.Cool };

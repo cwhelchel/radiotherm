@@ -82,12 +82,35 @@ namespace RadioThermLib.ProvidedServices
             return program;
         }
 
+        /// <inheritdoc />
+        public async Task SetCoolProgram(string url, ThermostatProgram program)
+        {
+            log.LogDebug($"setting cool program: {program}");
+
+            try
+            {
+                var json = JsonSerializer.Serialize(program);
+
+                log.LogDebug($"new cool program json: {json}");
+
+                var response = await SetJson(url, "/tstat/program/cool", json);
+
+                log.LogDebug($"response : {response}");
+            }
+            catch (Exception ex)
+            {
+                this.log.LogError(ex, $"exception caught while getting thermostat Cool program at {url}");
+
+                program = null;
+                storedError = new ThermostatError { ErrorMessage = ex.Message, ExceptionType = ex.GetType(), ExceptionObj = ex };
+            }
+        }
+
         /// <inheritdoc/>
         public async Task SetCoolAsync(string url, float temp)
         {
             if (temp < 35.0f || temp > 95.0f)
                 throw new ArgumentOutOfRangeException("temp", temp, strings.ValidTemperatureRangeInputMsg);
-
 
             var jsonObj = new JsonObject
             {
@@ -143,6 +166,22 @@ namespace RadioThermLib.ProvidedServices
             response.EnsureSuccessStatusCode();
 
             return await response.Content.ReadAsStringAsync();
+        }
+
+        private async Task<string> SetJson(string url, string endpoint, string json)
+        {
+            var requestMessage = new HttpRequestMessage(HttpMethod.Post, url + endpoint);
+
+            requestMessage.Content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            // Send the request to the server
+            HttpResponseMessage response = await client.SendAsync(requestMessage);
+
+            response.EnsureSuccessStatusCode();
+
+            // Get the response
+            var responseString = await response.Content.ReadAsStringAsync();
+            return responseString;
         }
     }
 }

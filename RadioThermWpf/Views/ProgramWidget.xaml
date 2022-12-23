@@ -19,15 +19,27 @@
              d:DesignHeight="450" d:DesignWidth="450">
 
     <materialDesign:Card>
-        <ListView ItemsSource="{Binding DayPrograms}">
+        <ListView ItemsSource="{Binding DayPrograms}" >
+
             <ListView.ItemsPanel>
                 <ItemsPanelTemplate>
                     <StackPanel Orientation="Horizontal" CanHorizontallyScroll="True"></StackPanel>
                 </ItemsPanelTemplate>
             </ListView.ItemsPanel>
+
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <StackPanel>
+                        <!--<ie:Interaction.Triggers>
+                            <ie:EventTrigger EventName="MouseLeftButtonUp">
+                                <ie:InvokeCommandAction 
+                                    Command="{Binding DataContext.OpenDetailsCommand, RelativeSource={RelativeSource FindAncestor, 
+                                        AncestorType={x:Type ItemsControl}}}"
+                                    CommandParameter="{Binding DayOfWeek}">
+                                </ie:InvokeCommandAction>
+                            </ie:EventTrigger>
+                        </ie:Interaction.Triggers>-->
+
                         <TextBlock Text="{Binding DayOfWeek}" VerticalAlignment="Center" />
                         <ListView ItemsSource="{Binding Data}">
                             <ListView.ItemTemplate>

@@ -13,7 +13,7 @@ namespace RadioThermLibTests.Mocks
         // If doing some testing w/ a real thermostat, don't return this. Instead return new HttpClientHandler()
         MockHttpMessageHandler mockHttpMessageHandler = new MockHttpMessageHandler();
 
-        public HttpMessageHandler GetHttpMessageHandler() => mockHttpMessageHandler;
+        public HttpMessageHandler GetHttpMessageHandler() => new HttpClientHandler(); //mockHttpMessageHandler;
 
         public T? GetValue<T>(string key)
         {

@@ -12,6 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using MaterialDesignThemes.Wpf;
+using RadioThermLib.ViewModels;
 
 namespace RadioThermWpf.Views
 {
@@ -23,6 +25,17 @@ namespace RadioThermWpf.Views
         public TimeProgramWidget()
         {
             InitializeComponent();
+        }
+
+        public TimeProgramViewModel ViewModel => (TimeProgramViewModel)DataContext;
+
+        public void ClockDialogOpenedEventHandler(object sender, DialogOpenedEventArgs eventArgs)
+            => Clock.Time = DateTime.Today.Add(ViewModel.StartTime);
+
+        public void ClockDialogClosingEventHandler(object sender, DialogClosingEventArgs eventArgs)
+        {
+            //if (Equals(eventArgs.Parameter, "1"))
+            //    ((TimeProgramViewModel)DataContext).Time = Clock.Time;
         }
     }
 }

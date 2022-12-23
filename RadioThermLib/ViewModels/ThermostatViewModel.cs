@@ -38,6 +38,7 @@ namespace RadioThermLib.ViewModels
             SetTemperatureCommand = new AsyncRelayCommand<string>(SetTemperatureAsync);
             ShowDetailsCommand = new RelayCommand(ShowDetails);
             GetProgramCommand = new AsyncRelayCommand(GetProgramAsync);
+            SetProgramCommand = new AsyncRelayCommand(SetProgramAsync);
         }
 
         public IRelayCommand<string> SetTemperatureCommand { get; set; }
@@ -47,6 +48,8 @@ namespace RadioThermLib.ViewModels
         public IRelayCommand ShowDetailsCommand { get; set; }
 
         public IRelayCommand GetProgramCommand { get; set; }
+
+        public IRelayCommand SetProgramCommand { get; set; }
 
         public ThermostatState? State
         {
@@ -177,6 +180,25 @@ namespace RadioThermLib.ViewModels
                     Program = new ProgramViewModel(tsp);
                 else
                     log.LogWarning("GetCoolProgram returned null instead of data");
+            }
+            else if (State.ThermostatMode == ThermostatModeEnum.Heat)
+            {
+                //await thermostatService.SetHeatAsync(this.thermostatUrl);
+            }
+
+            IsUpdating = false;
+        }
+
+        public async Task SetProgramAsync()
+        {
+            if (this.thermostatUrl == null || State == null || Program == null)
+                return;
+
+            IsUpdating = true;
+
+            if (State.ThermostatMode == ThermostatModeEnum.Cool)
+            {
+                await thermostatService.SetCoolProgram(this.thermostatUrl, Program.GetProgram());
             }
             else if (State.ThermostatMode == ThermostatModeEnum.Heat)
             {

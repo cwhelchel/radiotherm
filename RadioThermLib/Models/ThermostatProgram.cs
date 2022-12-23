@@ -74,6 +74,8 @@ public sealed class DayProgram
 
     public List<TimeProgram> ProgramData { get; }
 
+    public int DayIndex => day;
+
     public DayProgram(int day, List<int> data)
     {
         ArgumentNullException.ThrowIfNull(data);
@@ -105,8 +107,11 @@ public sealed class TimeProgram
 
     public float ProgrammedTemp { get; private set; }
 
+    public int TimeInt { get; }
+
     public TimeProgram(int time, int temp)
     {
+        TimeInt = time;
         Time = new TimeSpan(0, 0, time, 0);
         ProgrammedTemp = temp;
     }

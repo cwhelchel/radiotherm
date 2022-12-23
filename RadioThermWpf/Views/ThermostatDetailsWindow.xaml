@@ -162,6 +162,7 @@
                 <StackPanel Grid.Row="3" Margin="10">
                     <Button Command="{Binding GetProgramCommand}">Button</Button>
                     <local:ProgramWidget DataContext="{Binding Program}"></local:ProgramWidget>
+                    <Button Command="{Binding SetProgramCommand}">Button</Button>
                 </StackPanel>
             </Grid>
         </DockPanel>

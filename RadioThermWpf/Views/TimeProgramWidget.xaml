@@ -16,9 +16,9 @@
              Width="Auto"
              Height="Auto"
              d:DataContext="{d:DesignInstance vms:TimeProgramViewModel, IsDesignTimeCreatable=False}"
-             d:DesignHeight="450" d:DesignWidth="450">
+             d:DesignHeight="200" d:DesignWidth="450">
 
-    <materialDesign:Card>
+    <materialDesign:DialogHost>
         <Grid Margin="0">
             <Grid.RowDefinitions>
                 <RowDefinition />
@@ -30,13 +30,46 @@
             <StackPanel Grid.Row="0" Margin="8" HorizontalAlignment="Left" Orientation="Horizontal">
                 <TextBlock Text="Time:" Margin="5,0,20,0" />
                 <TextBlock Text="{Binding StartTime}"></TextBlock>
+                <Button
+                    Margin="8 0 0 0"
+                    Content="..."
+                    Command="{x:Static materialDesign:DialogHost.OpenDialogCommand}"
+                    materialDesign:DialogHost.DialogOpenedAttached="ClockDialogOpenedEventHandler"
+                    materialDesign:DialogHost.DialogClosingAttached="ClockDialogClosingEventHandler">
+                    <Button.CommandParameter>
+                        <Grid
+                            Margin="-1">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <materialDesign:Clock DisplayAutomation="ToMinutesOnly" x:Name="Clock" />
+                            <StackPanel
+                                Grid.Row="1"
+                                Margin="8"
+                                HorizontalAlignment="Right"
+                                Orientation="Horizontal">
+                                <Button
+                                    Style="{StaticResource MaterialDesignFlatButton}"
+                                    Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"
+                                    CommandParameter="0"
+                                    Content="CANCEL" />
+                                <Button
+                                    Style="{StaticResource MaterialDesignFlatButton}"
+                                    Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"
+                                    CommandParameter="1"
+                                    Content="OK" />
+                            </StackPanel>
+                        </Grid>
+                    </Button.CommandParameter>
+                </Button>
             </StackPanel>
 
 
             <StackPanel Grid.Row="1" Margin="8" HorizontalAlignment="Left" Orientation="Horizontal">
                 <TextBlock Text="Temperature" Margin="5,0,20,0" />
-                <Label Content="{Binding ProgrammedTemp}" ContentStringFormat="{}{0}°"/>
+                <TextBox Text="{Binding ProgrammedTemp}" />
             </StackPanel>
         </Grid>
-    </materialDesign:Card>
+    </materialDesign:DialogHost>
 </UserControl>
