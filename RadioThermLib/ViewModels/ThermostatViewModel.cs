@@ -39,6 +39,7 @@ namespace RadioThermLib.ViewModels
             ShowDetailsCommand = new RelayCommand(ShowDetails);
             GetProgramCommand = new AsyncRelayCommand(GetProgramAsync);
             SetProgramCommand = new AsyncRelayCommand(SetProgramAsync);
+            ToggleModeCommand = new AsyncRelayCommand(ToggleModeAsync);
         }
 
         public IRelayCommand<string> SetTemperatureCommand { get; set; }
@@ -50,6 +51,8 @@ namespace RadioThermLib.ViewModels
         public IRelayCommand GetProgramCommand { get; set; }
 
         public IRelayCommand SetProgramCommand { get; set; }
+
+        public IRelayCommand ToggleModeCommand { get; set; }
 
         public ThermostatState? State
         {
@@ -176,7 +179,7 @@ namespace RadioThermLib.ViewModels
             if (State.ThermostatMode == ThermostatModeEnum.Cool)
             {
                 var tsp = await thermostatService.GetCoolProgram(this.thermostatUrl);
-                if (tsp != null) 
+                if (tsp != null)
                     Program = new ProgramViewModel(tsp);
                 else
                     log.LogWarning("GetCoolProgram returned null instead of data");
@@ -204,6 +207,33 @@ namespace RadioThermLib.ViewModels
             {
                 //await thermostatService.SetHeatAsync(this.thermostatUrl);
             }
+
+            IsUpdating = false;
+        }
+
+        public async Task ToggleModeAsync()
+        {
+            // escape conditions
+            if (this.thermostatUrl == null || State == null)
+                return;
+
+            IsUpdating = true;
+
+            ThermostatModeEnum newMode;
+
+            if (State.ThermostatMode == ThermostatModeEnum.Cool)
+                newMode = ThermostatModeEnum.Heat;
+            else if (State.ThermostatMode == ThermostatModeEnum.Heat)
+                newMode = ThermostatModeEnum.Cool;
+            else
+            {
+                this.log.LogInformation("Unknown mode, not doing anything");
+                return;
+            }
+
+            await thermostatService.SetMode(this.thermostatUrl, newMode);
+
+            await FetchData();
 
             IsUpdating = false;
         }

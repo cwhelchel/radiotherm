@@ -23,6 +23,8 @@ namespace RadioThermLib.Services
 
         Task SetHeatAsync(string url, float temp);
 
+        Task SetMode(string url, ThermostatModeEnum newMode);
+
         ThermostatError? GetError();
     }
 

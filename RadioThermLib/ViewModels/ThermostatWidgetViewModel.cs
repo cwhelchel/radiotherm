@@ -72,7 +72,6 @@ namespace RadioThermLib.ViewModels
             }
             catch (Exception ex)
             {
-
                 string msg = RadioThermLib.strings.ErrUpdatingMsg;
                 this.log.LogError(ex, msg);
                 this.viewService.ShowDialog(RadioThermLib.strings.ErrUpdatingTitle, $"{msg}: {ex.Message}");

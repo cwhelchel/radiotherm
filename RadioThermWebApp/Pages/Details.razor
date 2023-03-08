@@ -42,6 +42,9 @@ else
                     <div class="card-body">
                         <h5 class="card-title">Current Mode</h5>
                         <p class="card-body">@thermostatState.ThermostatMode</p>
+                        <div class="btn-group">
+                            <button class="btn btn-secondary" @onclick="Toggle">Toggle</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -107,5 +110,22 @@ else
             source.Token);
 
         isSettingTemp = false;
+
+        thermostatState = tsViewModel.State;
     }
+
+    private async Task Toggle()
+    {
+        if (isSettingTemp)
+            source.Cancel();
+
+        await Task.Run(async () =>
+        {
+            await tsViewModel.ToggleModeAsync();
+        },
+            source.Token);
+
+        thermostatState = tsViewModel.State;
+    }
+
 }

@@ -142,6 +142,21 @@ namespace RadioThermLib.ProvidedServices
             response.EnsureSuccessStatusCode();
         }
 
+        /// <inheritdoc />
+        public async Task SetMode(string url, ThermostatModeEnum newMode)
+        {
+            var jsonObj = new JsonObject
+            {
+                { "tmode", (int)newMode }
+            };
+
+            var sc = new StringContent(jsonObj.ToJsonString(), Encoding.UTF8, "application/json");
+
+            var response = await client.PostAsync(url + "/tstat", sc);
+
+            response.EnsureSuccessStatusCode();
+        }
+
         /// <inheritdoc/>
         public ThermostatError? GetError()
         {

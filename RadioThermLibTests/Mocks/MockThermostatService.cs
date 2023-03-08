@@ -55,6 +55,11 @@ namespace RadioThermLibTests.Mocks
             state = state with { TemporaryHeatSetPoint = temp, CurrentState = ThermostatStateEnum.Heat };
         }
 
+        public Task SetMode(string url, ThermostatModeEnum newMode)
+        {
+            throw new NotImplementedException();
+        }
+
         public ThermostatError? GetError()
         {
             throw new NotImplementedException();

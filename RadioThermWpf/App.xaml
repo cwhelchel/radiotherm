@@ -30,7 +30,7 @@
             <Style x:Key="labelColor" TargetType="{x:Type Label}">
                 <Setter Property="Foreground" Value="#1976D2"/>
                 <Style.Triggers>
-                    <DataTrigger Binding="{Binding State.CurrentState}" Value="Heat">
+                    <DataTrigger Binding="{Binding State.ThermostatMode}" Value="Heat">
                         <Setter Property="Foreground" Value="#ba000d" />
                     </DataTrigger>
                 </Style.Triggers>
@@ -38,7 +38,7 @@
             <Style x:Key="textblockColor" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource MaterialDesignTextBlock}">
                 <Setter Property="Foreground" Value="#1976D2"/>
                 <Style.Triggers>
-                    <DataTrigger Binding="{Binding State.CurrentState}" Value="Heat">
+                    <DataTrigger Binding="{Binding State.ThermostatMode}" Value="Heat">
                         <Setter Property="Foreground" Value="#ba000d" />
                     </DataTrigger>
                 </Style.Triggers>
@@ -61,7 +61,7 @@
                 <Setter Property="Foreground" Value="#1976D2"/>
                 <Setter Property="FontSize" Value="24" ></Setter>
                 <Style.Triggers>
-                    <DataTrigger Binding="{Binding State.CurrentState}" Value="Heat">
+                    <DataTrigger Binding="{Binding State.ThermostatMode}" Value="Heat">
                         <Setter Property="Foreground" Value="#ba000d" />
                     </DataTrigger>
                 </Style.Triggers>

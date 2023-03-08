@@ -2,21 +2,10 @@
 
 FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
 WORKDIR /app
-EXPOSE 80
-EXPOSE 443
-
-FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
-WORKDIR /src
-COPY ["RadioThermWebApp/RadioThermWebApp.csproj", "RadioThermWebApp/"]
-RUN dotnet restore "RadioThermWebApp/RadioThermWebApp.csproj"
-COPY . .
-WORKDIR "/src/RadioThermWebApp"
-RUN dotnet build "RadioThermWebApp.csproj" -c Release -o /app/build
-
-FROM build AS publish
-RUN dotnet publish "RadioThermWebApp.csproj" -c Release -o /app/publish
+EXPOSE 8180
+EXPOSE 40443
 
 FROM base AS final
 WORKDIR /app
-COPY --from=publish /app/publish .
+COPY /bin/Release/net6.0/publish .
 ENTRYPOINT ["dotnet", "RadioThermWebApp.dll"]
